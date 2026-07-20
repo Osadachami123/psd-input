@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏭 Factory QC Tracker</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f1f5f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar-custom {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            padding: 15px 0;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        .navbar-custom h1 {
+            color: white;
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .navbar-custom p {
+            color: rgba(255,255,255,0.9);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
+            border-left: 4px solid var(--primary);
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stats-card .number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stats-card .label {
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .stats-card.green {
+            border-left-color: var(--success);
+        }
+
+        .stats-card.green .number {
+            color: var(--success);
+        }
+
+        .stats-card.red {
+            border-left-color: var(--danger);
+        }
+
+        .stats-card.red .number {
+            color: var(--danger);
+        }
+
+        .btn-primary-custom {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary-custom:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-success-custom {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-success-custom:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(34, 197, 94, 0.3);
+        }
+
+        .btn-danger-custom {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-danger-custom:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .card-custom {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .table-container table {
+            margin-bottom: 0;
+        }
+
+        .table-container thead {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .status-badge.pass {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status-badge.fail {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-content {
+            border-radius: 20px;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .modal-header .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            padding: 10px 15px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #334155;
+            font-size: 0.9rem;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding-left: 45px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-custom h1 {
+                font-size: 1.3rem;
+            }
+            .stats-card .number {
+                font-size: 1.5rem;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+            .action-buttons .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar-custom">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-industry me-2"></i>Factory QC Tracker</h1>
+                <p><i class="far fa-calendar-alt me-1"></i>Quality Control Management System</p>
+            </div>
+            <div>
+                <span class="badge bg-light text-dark p-2">
+                    <i class="fas fa-clock me-1"></i>
+                    <span id="currentTime"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container mt-4">
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="number" id="todayCount">0</div>
+                <div class="label"><i class="fas fa-calendar-day me-1"></i>Today's Tests</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card green">
+                <div class="number" id="passRate">0%</div>
+                <div class="label"><i class="fas fa-check-circle me-1"></i>Pass Rate</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="number" id="totalSamples">0</div>
+                <div class="label"><i class="fas fa-flask me-1"></i>Total Samples</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card red">
+                <div class="number" id="failCount">0</div>
+                <div class="label"><i class="fas fa-times-circle me-1"></i>Failed Tests</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="card-custom">
+        <div class="action-buttons">
+            <button class="btn btn-primary-custom" onclick="showAddSample()">
+                <i class="fas fa-plus me-2"></i>Add New Sample
+            </button>
+            <button class="btn btn-success-custom" onclick="showReports()">
+                <i class="fas fa-chart-bar me-2"></i>View Reports
+            </button>
+            <button class="btn btn-danger-custom" onclick="exportCSV()">
+                <i class="fas fa-file-export me-2"></i>Export CSV
+            </button>
+            <button class="btn btn-warning text-dark" onclick="refreshData()">
+                <i class="fas fa-sync me-2"></i>Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="card-custom">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search by bottle number..." onkeyup="filterSamples()">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="filterMachine" onchange="filterSamples()">
+                    <option value="">All Machines</option>
+                    <option value="6x12(1)">6x12(1) - Calcan</option>
+                    <option value="6x12(2)">6x12(2) - Sudan</option>
+                    <option value="12x40">12x40</option>
+                    <option value="-30">-30</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="filterStatus" onchange="filterSamples()">
+                    <option value="">All Status</option>
+                    <option value="Pass">Pass</option>
+                    <option value="Fail">Fail</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Samples Table -->
+    <div class="card-custom">
+        <h5 class="mb-3"><i class="fas fa-list me-2"></i>Sample Records</h5>
+        <div class="table-container" id="samplesTableContainer">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Bottle #</th>
+                        <th>Machine</th>
+                        <th>Date</th>
+                        <th>Density</th>
+                        <th>PSD</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="samplesTableBody">
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-3">
+                            <i class="fas fa-spinner fa-spin me-2"></i>Loading samples...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Sample Modal -->
+<div class="modal fade" id="sampleModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-plus-circle me-2"></i>Add New Sample</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="sampleForm">
+                <!-- Form will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Sample Modal -->
+<div class="modal fade" id="viewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-eye me-2"></i>Sample Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="viewContent">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-chart-bar me-2"></i>Reports</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="reportContent">
+                <!-- Report content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase & Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+<script>
+// ============================================
+// FIREBASE CONFIG
+// ============================================
+const firebaseConfig = {
+    apiKey: "AIzaSyAjwlQfgrzsVIYtIhwqckX56eeC48xRqCM",
+    authDomain: "factory-qc-tracker.firebaseapp.com",
+    databaseURL: "https://factory-qc-tracker-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "factory-qc-tracker",
+    storageBucket: "factory-qc-tracker.firebasestorage.app",
+    messagingSenderId: "9502141528",
+    appId: "1:9502141528:web:68cecd30a1a97a293a6e2d",
+    measurementId: "G-Z4CW9200ED"
+};
+
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+// ============================================
+// GLOBAL VARIABLES
+// ============================================
+let currentBottleNumber = 200;
+let allSamples = [];
+let samplesLoaded = false;
+
+// ============================================
+// INITIALIZATION
+// ============================================
+window.onload = function() {
+    updateClock();
+    setInterval(updateClock, 1000);
+    getCurrentBottleNumber();
+    loadAllData();
+};
+
+function updateClock() {
+    const now = new Date();
+    document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+}
+
+function getCurrentBottleNumber() {
+    database.ref('settings/currentBottleNumber').once('value').then(snapshot => {
+        if (snapshot.exists()) {
+            currentBottleNumber = snapshot.val();
+        } else {
+            database.ref('settings/currentBottleNumber').set(200);
+        }
+    });
+}
+
+function loadAllData() {
+    database.ref('samples').orderByChild('date').once('value').then(snapshot => {
+        const data = snapshot.val();
+        allSamples = [];
+        if (data) {
+            Object.values(data).forEach(sample => {
+                allSamples.push(sample);
+            });
+            // Sort by date and then by bottle number
+            allSamples.sort((a, b) => {
+                if (a.date !== b.date) return b.date.localeCompare(a.date);
+                return a.bottleNumber.localeCompare(b.bottleNumber);
+            });
+        }
+        samplesLoaded = true;
+        updateDashboard();
+        renderSamples();
+    }).catch(error => {
+        console.error('Error loading data:', error);
+        document.getElementById('samplesTableBody').innerHTML = `
+            <tr><td colspan="7" class="text-center text-danger">
+                <i class="fas fa-exclamation-circle me-2"></i>Error loading data. Please refresh.
+            </td></tr>
+        `;
+    });
+}
+
+// ============================================
+// DASHBOARD
+// ============================================
+function updateDashboard() {
+    const today = new Date().toISOString().split('T')[0];
+    const todaySamples = allSamples.filter(s => s.date === today);
+    const total = allSamples.length;
+    const todayCount = todaySamples.length;
+    const passCount = allSamples.filter(s => s.status === 'Pass').length;
+    const failCount = allSamples.filter(s => s.status === 'Fail').length;
+    
+    document.getElementById('todayCount').textContent = todayCount;
+    document.getElementById('totalSamples').textContent = total;
+    document.getElementById('failCount').textContent = failCount;
+    document.getElementById('passRate').textContent = total > 0 ? Math.round((passCount/total)*100) + '%' : '0%';
+}
+
+// ============================================
+// RENDER SAMPLES TABLE
+// ============================================
+function renderSamples(filteredData = null) {
+    const tbody = document.getElementById('samplesTableBody');
+    const data = filteredData || allSamples;
+    
+    if (data.length === 0) {
+        tbody.innerHTML = `
+            <tr><td colspan="7" class="text-center text-muted py-4">
+                <i class="fas fa-inbox me-2"></i>No samples found
+            </td></tr>
+        `;
+        return;
+    }
+    
+    let html = '';
+    data.slice(0, 100).forEach(sample => {
+        const statusClass = sample.status === 'Pass' ? 'pass' : 'fail';
+        const psdValues = sample.psd ? Object.values(sample.psd).filter(v => v > 0).length : 0;
+        
+        html += `
+            <tr>
+                <td><strong>${sample.bottleNumber}</strong></td>
+                <td><span class="badge bg-info bg-opacity-10 text-info">${sample.machineType}</span></td>
+                <td>${sample.date}</td>
+                <td>${sample.density} g/100ml</td>
+                <td>${psdValues}/6</td>
+                <td><span class="status-badge ${statusClass}">${sample.status}</span></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" onclick="viewSample('${sample.bottleNumber}')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSample('${sample.bottleNumber}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+    
+    tbody.innerHTML = html;
+}
+
+// ============================================
+// FILTER SAMPLES
+// ============================================
+function filterSamples() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const machine = document.getElementById('filterMachine').value;
+    const status = document.getElementById('filterStatus').value;
+    
+    let filtered = allSamples;
+    
+    if (search) {
+        filtered = filtered.filter(s => s.bottleNumber.toLowerCase().includes(search));
+    }
+    if (machine) {
+        filtered = filtered.filter(s => s.machineType === machine);
+    }
+    if (status) {
+        filtered = filtered.filter(s => s.status === status);
+    }
+    
+    renderSamples(filtered);
+}
+
+function refreshData() {
+    document.getElementById('samplesTableBody').innerHTML = `
+        <tr><td colspan="7" class="text-center text-muted py-3">
+            <i class="fas fa-spinner fa-spin me-2"></i>Refreshing...
+        </td></tr>
+    `;
+    loadAllData();
+}
+
+// ============================================
+// ADD SAMPLE
+// ============================================
+function showAddSample() {
+    const nextNumber = currentBottleNumber + 1;
+    
+    const formHTML = `
+        <form id="sampleFormData" onsubmit="saveSample(event)">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Bottle Number</label>
+                        <input type="text" class="form-control" id="bottleNumber" value="BT${String(nextNumber).padStart(3, '0')}" readonly>
+                        <small class="text-muted">Auto-generated, can be edited</small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Machine Type</label>
+                        <select class="form-select" id="machineType" onchange="togglePlatedField()">
+                            <option value="6x12(1)">6x12(1) - Calcan</option>
+                            <option value="6x12(2)">6x12(2) - Sudan</option>
+                            <option value="12x40">12x40</option>
+                            <option value="-30">-30</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">PSD Results (%)</label>
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <input type="number" class="form-control" id="psd_6" placeholder="+6" step="0.01">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" class="form-control" id="psd_6x8" placeholder="6x8" step="0.01">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" class="form-control" id="psd_6x10" placeholder="6x10" step="0.01">
+                    </div>
+                    <div class="col-md-4 mt-2">
+                        <input type="number" class="form-control" id="psd_6x12" placeholder="6x12" step="0.01">
+                    </div>
+                    <div class="col-md-4 mt-2">
+                        <input type="number" class="form-control" id="psd_6x14" placeholder="6x14" step="0.01">
+                    </div>
+                    <div class="col-md-4 mt-2">
+                        <input type="number" class="form-control" id="psd_-14" placeholder="-14" step="0.01">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label">Density (g/100ml) <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="density" step="0.01" required>
+                    </div>
+                </div>
+                <div class="col-md-4" id="platedField">
+                    <div class="mb-3">
+                        <label class="form-label">Plated</label>
+                        <input type="number" class="form-control" id="plated" step="0.01">
+                        <small class="text-muted">Only for 6x12(1)</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label">Status <span class="text-danger">*</span></label>
+                        <select class="form-select" id="status" required>
+                            <option value="Pass">✅ Pass</option>
+                            <option value="Fail">❌ Fail</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary-custom">
+                    <i class="fas fa-save me-2"></i>Save Sample
+                </button>
+            </div>
+        </form>
+    `;
+    
+    document.getElementById('sampleForm').innerHTML = formHTML;
+    togglePlatedField();
+    
+    const modal = new bootstrap.Modal(document.getElementById('sampleModal'));
+    modal.show();
+}
+
+function togglePlatedField() {
+    const machineType = document.getElementById('machineType').value;
+    const platedField = document.getElementById('platedField');
+    if (machineType === '6x12(1)') {
+        platedField.style.display = 'block';
+    } else {
+        platedField.style.display = 'none';
+        document.getElementById('plated').value = '';
+    }
+}
+
+function saveSample(event) {
+    event.preventDefault();
+    
+    const bottleNumber = document.getElementById('bottleNumber').value;
+    const machineType = document.getElementById('machineType').value;
+    const density = parseFloat(document.getElementById('density').value);
+    const status = document.getElementById('status').value;
+    const plated = document.getElementById('plated').value ? parseFloat(document.getElementById('plated').value) : null;
+    
+    // Validate
+    if (!bottleNumber || !density) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    // Get PSD values
+    const psd = {
+        '+6': parseFloat(document.getElementById('psd_6').value) || 0,
+        '6x8': parseFloat(document.getElementById('psd_6x8').value) || 0,
+        '6x10': parseFloat(document.getElementById('psd_6x10').value) || 0,
+        '6x12': parseFloat(document.getElementById('psd_6x12').value) || 0,
+        '6x14': parseFloat(document.getElementById('psd_6x14').value) || 0,
+        '-14': parseFloat(document.getElementById('psd_-14').value) || 0
+    };
+    
+    const sampleData = {
+        bottleNumber: bottleNumber,
+        machineType: machineType,
+        date: new Date().toISOString().split('T')[0],
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
+        psd: psd,
+        density: density,
+        status: status
+    };
+    
+    if (plated !== null && machineType === '6x12(1)') {
+        sampleData.plated = plated;
+    }
+    
+    // Check if bottle number already exists
+    database.ref('samples/' + bottleNumber).once('value').then(snapshot => {
+        if (snapshot.exists()) {
+            if (!confirm(`Bottle ${bottleNumber} already exists. Do you want to overwrite?`)) {
+                return;
+            }
+        }
+        
+        // Save to Firebase
+        database.ref('samples/' + bottleNumber).set(sampleData).then(() => {
+            // Update current bottle number
+            const num = parseInt(bottleNumber.replace('BT', ''));
+            if (num > currentBottleNumber) {
+                currentBottleNumber = num;
+                database.ref('settings/currentBottleNumber').set(currentBottleNumber);
+            }
+            
+            // Close modal and refresh
+            bootstrap.Modal.getInstance(document.getElementById('sampleModal')).hide();
+            refreshData();
+            showToast('Sample saved successfully!', 'success');
+        }).catch(error => {
+            alert('Error saving sample: ' + error.message);
+        });
+    });
+}
+
+// ============================================
+// VIEW SAMPLE
+// ============================================
+function viewSample(bottleNumber) {
+    database.ref('samples/' + bottleNumber).once('value').then(snapshot => {
+        const sample = snapshot.val();
+        if (!sample) {
+            alert('Sample not found');
+            return;
+        }
+        
+        let psdHTML = '';
+        if (sample.psd) {
+            psdHTML = '<div class="row g-2">';
+            for (const [key, value] of Object.entries(sample.psd)) {
+                psdHTML += `
+                    <div class="col-md-4">
+                        <div class="p-2 bg-light rounded">
+                            <strong>${key}:</strong> ${value}%
+                        </div>
+                    </div>
+                `;
+            }
+            psdHTML += '</div>';
+        }
+        
+        const contentHTML = `
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="text-muted">Bottle Number</label>
+                        <h5><strong>${sample.bottleNumber}</strong></h5>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-muted">Machine Type</label>
+                        <h5><span class="badge bg-info">${sample.machineType}</span></h5>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-muted">Date</label>
+                        <h5>${sample.date}</h5>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-muted">Density</label>
+                        <h5>${sample.density} g/100ml</h5>
+                    </div>
+                    ${sample.plated ? `
+                        <div class="mb-3">
+                            <label class="text-muted">Plated</label>
+                            <h5>${sample.plated}</h5>
+                        </div>
+                    ` : ''}
+                    <div class="mb-3">
+                        <label class="text-muted">Status</label>
+                        <h5><span class="status-badge ${sample.status === 'Pass' ? 'pass' : 'fail'}">${sample.status}</span></h5>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="text-muted">PSD Results</label>
+                    ${psdHTML}
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('viewContent').innerHTML = contentHTML;
+        const modal = new bootstrap.Modal(document.getElementById('viewModal'));
+        modal.show();
+    });
+}
+
+// ============================================
+// DELETE SAMPLE
+// ============================================
+function deleteSample(bottleNumber) {
+    if (!confirm(`Are you sure you want to delete sample ${bottleNumber}?`)) {
+        return;
+    }
+    
+    database.ref('samples/' + bottleNumber).remove().then(() => {
+        refreshData();
+        showToast('Sample deleted successfully!', 'warning');
+    }).catch(error => {
+        alert('Error deleting sample: ' + error.message);
+    });
+}
+
+// ============================================
+// REPORTS
+// ============================================
+function showReports() {
+    const content = `
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h6>Summary</h6>
+                        <hr>
+                        <p><strong>Total Samples:</strong> ${allSamples.length}</p>
+                        <p><strong>Pass:</strong> ${allSamples.filter(s => s.status === 'Pass').length}</p>
+                        <p><strong>Fail:</strong> ${allSamples.filter(s => s.status === 'Fail').length}</p>
+                        <p><strong>Pass Rate:</strong> ${allSamples.length > 0 ? Math.round((allSamples.filter(s => s.status === 'Pass').length/allSamples.length)*100) : 0}%</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h6>By Machine</h6>
+                        <hr>
+                        ${['6x12(1)', '6x12(2)', '12x40', '-30'].map(machine => {
+                            const count = allSamples.filter(s => s.machineType === machine).length;
+                            const pass = allSamples.filter(s => s.machineType === machine && s.status === 'Pass').length;
+                            return `
+                                <p><strong>${machine}:</strong> ${count} samples, ${count > 0 ? Math.round((pass/count)*100) : 0}% pass</p>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h6>Recent Activity</h6>
+                        <hr>
+                        <div style="max-height: 300px; overflow-y: auto;">
+                            ${allSamples.slice(0, 20).map(s => `
+                                <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                                    <div>
+                                        <strong>${s.bottleNumber}</strong>
+                                        <span class="badge bg-info ms-2">${s.machineType}</span>
+                                    </div>
+                                    <div>
+                                        <span class="status-badge ${s.status === 'Pass' ? 'pass' : 'fail'}">${s.status}</span>
+                                        <small class="text-muted ms-2">${s.date}</small>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 text-center">
+                <button class="btn btn-success-custom" onclick="exportCSV()">
+                    <i class="fas fa-file-csv me-2"></i>Export Full Report
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('reportContent').innerHTML = content;
+    const modal = new bootstrap.Modal(document.getElementById('reportModal'));
+    modal.show();
+}
+
+// ============================================
+// EXPORT CSV
+// ============================================
+function exportCSV() {
+    if (allSamples.length === 0) {
+        alert('No data to export');
+        return;
+    }
+    
+    // Headers
+    let csv = 'Bottle Number,Machine,Date,Density,Status,Plated,PSD +6,PSD 6x8,PSD 6x10,PSD 6x12,PSD 6x14,PSD -14\n';
+    
+    allSamples.forEach(s => {
+        const row = [
+            s.bottleNumber,
+            s.machineType,
+            s.date,
+            s.density,
+            s.status,
+            s.plated || '',
+            s.psd?.['+6'] || '',
+            s.psd?.['6x8'] || '',
+            s.psd?.['6x10'] || '',
+            s.psd?.['6x12'] || '',
+            s.psd?.['6x14'] || '',
+            s.psd?.['-14'] || ''
+        ];
+        csv += row.join(',') + '\n';
+    });
+    
+    // Download
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `QC_Report_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    
+    showToast('CSV exported successfully!', 'success');
+}
+
+// ============================================
+// TOAST NOTIFICATION
+// ============================================
+function showToast(message, type = 'success') {
+    const colors = {
+        success: '#22c55e',
+        warning: '#f59e0b',
+        danger: '#ef4444',
+        info: '#3b82f6'
+    };
+    
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${colors[type]};
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        z-index: 9999;
+        animation: slideIn 0.3s ease;
+        max-width: 400px;
+    `;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Add animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+`;
+document.head.appendChild(style);
+
+// ============================================
+// KEYBOARD SHORTCUTS
+// ============================================
+document.addEventListener('keydown', function(e) {
+    // Ctrl+N for new sample
+    if (e.ctrlKey && e.key === 'n') {
+        e.preventDefault();
+        showAddSample();
+    }
+    // Ctrl+R for refresh
+    if (e.ctrlKey && e.key === 'r') {
+        e.preventDefault();
+        refreshData();
+    }
+    // Escape to close modals
+    if (e.key === 'Escape') {
+        const modals = document.querySelectorAll('.modal.show');
+        modals.forEach(modal => {
+            const instance = bootstrap.Modal.getInstance(modal);
+            if (instance) instance.hide();
+        });
+    }
+});
+
+console.log('🏭 Factory QC Tracker loaded successfully!');
+console.log('📊 Total samples:', allSamples.length);
+console.log('💡 Shortcuts: Ctrl+N (New), Ctrl+R (Refresh)');
+</script>
+
+</body>
+                                                             </html>
