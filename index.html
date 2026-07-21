@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Coal QC Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -22,126 +22,122 @@
     --moss-bg:#e7eee0;
     --rust:#a5432e;
     --rust-bg:#f4e1dc;
-    --density-tint:#eaf1f4;
-    --density-ink:#3b6b7a;
-    --plated-tint:#f4ecda;
-    --plated-ink:#8a6a1f;
+    --density-tint:#e4eff3;
+    --density-ink:#2f6376;
+    --density-strong:#3b6b7a;
+    --plated-tint:#f6ecd3;
+    --plated-ink:#7d5c14;
+    --plated-strong:#8a6a1f;
     --line:#d9d0bd;
-    --radius:12px;
+    --radius:14px;
     --shadow:0 1px 2px rgba(21,19,15,.08), 0 10px 28px rgba(21,19,15,.07);
   }
-
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
-  body{
-    background:var(--paper);
-    color:var(--coal-900);
-    font-family:'IBM Plex Mono',monospace;
-    min-height:100vh;
-  }
-  .display{font-family:'Archivo',sans-serif;}
+  body{background:var(--paper);color:var(--coal-900);font-family:'IBM Plex Mono',monospace;min-height:100vh;}
 
   header.topbar{
-    background:var(--coal-950);
-    color:var(--paper);
-    padding:0 20px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    height:64px;
-    position:sticky;
-    top:0;
-    z-index:60;
-    border-bottom:3px solid var(--ember);
+    background:var(--coal-950);color:var(--paper);padding:0 20px;
+    display:flex;align-items:center;justify-content:space-between;height:64px;
+    position:sticky;top:0;z-index:60;border-bottom:3px solid var(--ember);
   }
-  .brand{display:flex;align-items:center;gap:12px;}
+  .brand{display:flex;align-items:center;gap:12px;cursor:pointer;background:none;border:none;padding:0;}
   .brand-mark{
-    width:34px;height:34px;border-radius:8px;
-    background:linear-gradient(155deg,var(--ember),#8f5518);
+    width:34px;height:34px;border-radius:8px;background:linear-gradient(155deg,var(--ember),#8f5518);
     display:flex;align-items:center;justify-content:center;
     font-family:'Archivo',sans-serif;font-weight:900;color:var(--coal-950);font-size:15px;flex-shrink:0;
   }
-  .brand-text .t1{font-family:'Archivo',sans-serif;font-weight:900;font-size:17px;letter-spacing:.2px;line-height:1.1;}
+  .brand-text{text-align:left;}
+  .brand-text .t1{font-family:'Archivo',sans-serif;font-weight:900;font-size:17px;letter-spacing:.2px;line-height:1.1;color:var(--paper);}
   .brand-text .t2{font-size:10.5px;color:var(--ash-300);letter-spacing:2px;font-family:'IBM Plex Mono',monospace;}
 
-  nav.tabs{display:flex;gap:4px;background:var(--coal-900);padding:4px;border-radius:10px;}
-  nav.tabs button{
-    appearance:none;border:none;background:transparent;color:var(--ash-300);
-    padding:9px 18px;border-radius:7px;cursor:pointer;
-    font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;letter-spacing:.3px;
-    transition:.15s;text-transform:uppercase;
+  .back-btn{
+    appearance:none;border:1px solid #3a352c;background:var(--coal-900);color:var(--ash-300);
+    padding:8px 14px;border-radius:8px;cursor:pointer;font-family:'Archivo',sans-serif;
+    font-weight:700;font-size:12px;letter-spacing:.3px;display:flex;align-items:center;gap:6px;
   }
-  nav.tabs button.active{background:var(--ember);color:var(--coal-950);}
-  nav.tabs button:not(.active):hover{color:var(--paper);}
+  .back-btn:hover{color:var(--paper);border-color:var(--ember);}
 
-  main{max-width:1080px;margin:0 auto;padding:28px 20px 80px;}
-  .view{display:none;}
-  .view.active{display:block;}
+  main{max-width:1080px;margin:0 auto;padding:28px 20px 100px;}
+  .screen{display:none;}
+  .screen.active{display:block;}
 
   .section-head{margin-bottom:22px;}
-  .eyebrow{
-    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2.5px;
-    text-transform:uppercase;color:var(--ember);font-weight:600;margin-bottom:6px;
-  }
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--ember);font-weight:600;margin-bottom:6px;}
   h1{font-family:'Archivo',sans-serif;font-weight:900;font-size:26px;margin:0 0 4px;color:var(--coal-950);}
   .sub{color:var(--ash-600);font-size:13.5px;margin:0;}
 
-  .step{
-    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
-    box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden;
-    transition:opacity .2s;
+  /* -------- Home -------- */
+  .home-wrap{min-height:calc(100vh - 220px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+  .home-logo{
+    width:72px;height:72px;border-radius:18px;background:linear-gradient(155deg,var(--ember),#8f5518);
+    display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-weight:900;
+    color:var(--coal-950);font-size:28px;margin:0 auto 18px;box-shadow:var(--shadow);
   }
-  .step.locked{opacity:.45;pointer-events:none;}
-  .step-head{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:18px 22px;
+  .home-title{font-family:'Archivo',sans-serif;font-weight:900;font-size:30px;color:var(--coal-950);margin:0 0 6px;}
+  .home-sub{color:var(--ash-600);font-size:14px;margin:0 0 36px;}
+  .home-actions{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;}
+  .home-btn{
+    appearance:none;border:none;border-radius:16px;padding:34px 40px;cursor:pointer;
+    font-family:'Archivo',sans-serif;font-weight:900;font-size:18px;letter-spacing:.4px;
+    display:flex;flex-direction:column;align-items:center;gap:10px;min-width:200px;
+    transition:.15s;box-shadow:var(--shadow);
   }
-  .step-head .left{display:flex;align-items:center;gap:12px;}
-  .step-num{
-    width:26px;height:26px;border-radius:7px;background:var(--coal-900);color:var(--ember-bright);
-    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;
-  }
-  .step.done .step-num{background:var(--moss);color:#fff;}
-  .step-title{font-family:'Archivo',sans-serif;font-weight:800;font-size:14px;letter-spacing:.3px;text-transform:uppercase;color:var(--coal-950);}
-  .step-value{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ash-600);margin-top:2px;}
-  .step-body{padding:0 22px 22px;}
-  .link-btn{
-    background:none;border:none;color:var(--ember);font-family:'IBM Plex Mono',monospace;
-    font-size:12px;font-weight:600;cursor:pointer;text-decoration:underline;padding:4px;
-  }
+  .home-btn .icon{font-size:30px;}
+  .home-btn.primary{background:var(--ember);color:var(--coal-950);}
+  .home-btn.primary:hover{background:var(--ember-bright);transform:translateY(-3px);}
+  .home-btn.secondary{background:var(--coal-950);color:var(--paper);}
+  .home-btn.secondary:hover{background:var(--coal-800);transform:translateY(-3px);}
+  .home-btn .cap{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:11px;opacity:.7;text-transform:none;letter-spacing:.2px;}
+  .counter-link{margin-top:40px;background:none;border:none;color:var(--ash-600);font-size:11.5px;
+    text-decoration:underline;cursor:pointer;font-family:'IBM Plex Mono',monospace;}
+  .counter-link:hover{color:var(--ember);}
 
-  .choice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+  /* -------- Choice screens (machine / size) -------- */
+  .choice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;}
   .choice-btn{
-    appearance:none;border:2px solid var(--line);background:var(--paper);
-    border-radius:10px;padding:20px 14px;cursor:pointer;text-align:center;
-    font-family:'Archivo',sans-serif;font-weight:800;font-size:16px;color:var(--coal-950);
-    transition:.15s;
+    appearance:none;border:2px solid var(--line);background:#fff;
+    border-radius:12px;padding:26px 16px;cursor:pointer;text-align:center;
+    font-family:'Archivo',sans-serif;font-weight:800;font-size:17px;color:var(--coal-950);
+    transition:.15s;box-shadow:var(--shadow);
   }
-  .choice-btn .tag{display:block;font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:11px;color:var(--ash-600);margin-top:4px;text-transform:none;}
+  .choice-btn .tag{display:block;font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:11px;color:var(--ash-600);margin-top:6px;text-transform:none;}
   .choice-btn:hover{border-color:var(--ember);transform:translateY(-2px);}
   .choice-btn.selected{border-color:var(--ember);background:var(--coal-950);color:var(--paper);}
   .choice-btn.selected .tag{color:var(--ash-300);}
 
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;}
-  label{display:block;font-size:11.5px;color:var(--ash-600);margin-bottom:5px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;}
-  input,select{
-    width:100%;padding:10px 11px;border:1.5px solid var(--line);border-radius:8px;
-    font-family:'IBM Plex Mono',monospace;font-size:14px;background:var(--paper);color:var(--coal-950);
+  /* -------- Card / form -------- */
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-bottom:18px;}
+  .bottle-banner{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    background:var(--coal-950);color:var(--paper);border-radius:var(--radius);padding:16px 20px;margin-bottom:18px;
   }
-  input:focus,select:focus{outline:2px solid var(--ember);outline-offset:1px;border-color:var(--ember);}
-  .field{margin-bottom:0;}
+  .bottle-banner .lbl{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ash-300);}
+  .bottle-banner .num{font-family:'Archivo',sans-serif;font-weight:900;font-size:26px;color:var(--ember-bright);}
+  .bottle-banner .ctx{font-size:12px;color:var(--ash-300);}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;}
+  label{display:block;font-size:11px;color:var(--ash-600);margin-bottom:6px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;}
+  .num-field{
+    width:100%;padding:14px 12px;border:2px solid var(--line);border-radius:10px;
+    font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;background:var(--paper);color:var(--coal-950);
+    text-align:center;cursor:pointer;transition:.15s;
+  }
+  .num-field:focus{outline:none;}
+  .num-field.active-field{border-color:var(--ember);background:#fff;box-shadow:0 0 0 3px rgba(201,131,47,.18);}
+  .num-field.filled{border-color:var(--moss);background:var(--moss-bg);}
+  .num-field.computed{background:var(--plated-tint);border-style:dashed;border-color:var(--plated-strong);color:var(--plated-ink);cursor:default;font-weight:700;}
+  .field-note{font-size:10px;color:var(--ash-600);margin-top:4px;text-align:center;}
+
   .divider{height:1px;background:var(--line);margin:20px 0;}
   .group-label{font-family:'Archivo',sans-serif;font-size:12.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--coal-800);margin-bottom:10px;}
 
-  .btn{
-    appearance:none;border:none;border-radius:8px;padding:11px 18px;
-    font-family:'Archivo',sans-serif;font-weight:700;font-size:13px;cursor:pointer;
-    transition:.15s;letter-spacing:.3px;text-transform:uppercase;
-  }
+  .btn{appearance:none;border:none;border-radius:9px;padding:13px 20px;font-family:'Archivo',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:.15s;letter-spacing:.3px;text-transform:uppercase;}
   .btn-primary{background:var(--ember);color:var(--coal-950);}
   .btn-primary:hover{background:var(--ember-bright);}
   .btn-ghost{background:var(--paper-dim);color:var(--coal-900);border:1px solid var(--line);}
   .btn-ghost:hover{background:var(--line);}
+  .btn-block{width:100%;}
   .btn:disabled{opacity:.5;cursor:not-allowed;}
 
   .submit-row{display:flex;justify-content:flex-end;gap:10px;margin-top:22px;}
@@ -150,77 +146,751 @@
   .msg.ok{background:var(--moss-bg);color:var(--moss);}
   .msg.err{background:var(--rust-bg);color:var(--rust);}
 
-  .context-bar{
-    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-    background:var(--coal-950);color:var(--paper);padding:12px 18px;border-radius:10px;margin-bottom:18px;
-  }
-  .context-pill{
-    background:var(--coal-800);padding:5px 12px;border-radius:20px;font-size:12px;
-    display:flex;align-items:center;gap:8px;
-  }
+  /* -------- Report -------- */
+  .context-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--coal-950);color:var(--paper);padding:14px 18px;border-radius:12px;margin-bottom:18px;}
+  .context-pill{background:var(--coal-800);padding:6px 13px;border-radius:20px;font-size:12px;display:flex;align-items:center;gap:8px;}
   .context-pill b{color:var(--ember-bright);}
-  .context-bar .link-btn{color:var(--ember-bright);margin-left:auto;}
 
   .filter-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;}
   .filter-row .field{min-width:150px;flex:1;}
+  .filter-row input[type=date]{width:100%;padding:10px 11px;border:1.5px solid var(--line);border-radius:8px;font-family:'IBM Plex Mono',monospace;font-size:14px;background:var(--paper);color:var(--coal-950);}
   .filter-actions{display:flex;gap:10px;flex-wrap:wrap;}
 
   .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:#fff;}
-  table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:900px;}
-  thead tr.group-row th{
-    background:var(--coal-950);color:var(--ash-300);padding:8px 10px;
-    font-family:'Archivo',sans-serif;font-weight:800;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;
-    border-bottom:1px solid var(--coal-800);text-align:center;
-  }
-  thead tr.field-row th{
-    background:var(--coal-900);color:var(--ash-300);text-align:start;padding:9px 10px;
-    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;white-space:nowrap;
-  }
+  table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:820px;}
+  thead tr.group-row th{background:var(--coal-950);color:var(--ash-300);padding:9px 10px;font-family:'Archivo',sans-serif;font-weight:800;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--coal-800);text-align:center;}
+  thead tr.field-row th{background:var(--coal-900);color:var(--ash-300);text-align:start;padding:10px 10px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;white-space:nowrap;}
   th.density-group, td.density-cell{background:var(--density-tint);color:var(--density-ink);}
   th.plated-group, td.plated-cell{background:var(--plated-tint);color:var(--plated-ink);}
-  thead tr.group-row th.density-group{background:var(--density-ink);color:#fff;}
-  thead tr.group-row th.plated-group{background:var(--plated-ink);color:#fff;}
-  tbody td{padding:9px 10px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;white-space:nowrap;}
+  thead tr.group-row th.density-group{background:var(--density-strong);color:#fff;}
+  thead tr.group-row th.plated-group{background:var(--plated-strong);color:#fff;}
+  th.density-group, td.density-cell{border-left:3px solid var(--density-strong);}
+  th.plated-group, td.plated-cell{border-left:3px solid var(--plated-strong);}
+  tbody td{padding:10px 10px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;white-space:nowrap;}
   tbody td.density-cell, tbody td.plated-cell{font-weight:700;}
   tbody tr:hover td:not(.density-cell):not(.plated-cell){background:var(--paper-dim);}
   tbody tr:last-child td{border-bottom:none;}
   .empty-state{padding:44px 20px;text-align:center;color:var(--ash-600);}
   .empty-state .big{font-size:32px;margin-bottom:8px;}
-
   .result-summary{display:flex;align-items:center;justify-content:space-between;margin:16px 0 12px;flex-wrap:wrap;gap:10px;}
   .count-pill{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ash-600);}
 
-  .modal-overlay{
-    position:fixed;inset:0;background:rgba(21,19,15,.72);
-    display:none;align-items:center;justify-content:center;z-index:100;padding:20px;
-  }
-  .modal-overlay.show{display:flex;}
-  .modal-card{
-    background:#fff;border-radius:16px;padding:28px;max-width:420px;width:100%;
-    box-shadow:0 24px 60px rgba(0,0,0,.35);
-  }
-  .modal-card .eyebrow{margin-bottom:8px;}
-  .modal-card h2{font-family:'Archivo',sans-serif;font-weight:900;font-size:20px;margin:0 0 18px;color:var(--coal-950);}
-
   footer{text-align:center;color:var(--ash-600);font-size:11px;padding:24px 0;font-family:'IBM Plex Mono',monospace;}
+
+  /* -------- Custom numeric keypad -------- */
+  .keypad-overlay{position:fixed;inset:0;background:rgba(21,19,15,.55);display:none;align-items:flex-end;justify-content:center;z-index:200;}
+  .keypad-overlay.show{display:flex;}
+  .keypad-sheet{width:100%;max-width:420px;background:var(--coal-950);border-radius:20px 20px 0 0;padding:16px 16px 22px;box-shadow:0 -10px 40px rgba(0,0,0,.4);}
+  .keypad-top{display:flex;align-items:center;justify-content:space-between;padding:6px 6px 14px;}
+  .keypad-label{font-family:'Archivo',sans-serif;font-weight:800;font-size:13px;color:var(--ash-300);letter-spacing:.5px;text-transform:uppercase;}
+  .keypad-close{background:none;border:none;color:var(--ash-300);font-size:20px;cursor:pointer;line-height:1;padding:4px 8px;}
+  .keypad-preview{
+    font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:32px;color:var(--ember-bright);
+    text-align:center;padding:10px 0 18px;letter-spacing:1px;min-height:44px;
+  }
+  .keypad-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  .keypad-grid button{
+    appearance:none;border:none;background:var(--coal-800);color:var(--paper);
+    padding:16px 0;border-radius:10px;font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;cursor:pointer;
+  }
+  .keypad-grid button:active{background:var(--coal-900);}
+  .keypad-grid button.kp-back{color:var(--ember-bright);}
+  .keypad-ok{grid-column:1 / -1;background:var(--ember) !important;color:var(--coal-950) !important;font-family:'Archivo',sans-serif !important;font-weight:800 !important;letter-spacing:.5px;text-transform:uppercase;font-size:15px !important;padding:16px 0 !important;}
 
   @media (max-width:640px){
     .brand-text .t2{display:none;}
-    nav.tabs button{padding:8px 12px;font-size:12px;}
     h1{font-size:21px;}
-    table{min-width:760px;}
+    table{min-width:700px;}
+    .home-btn{min-width:150px;padding:26px 22px;}
   }
 </style>
 </head>
 <body>
 
 <header class="topbar">
-  <div class="brand">
+  <button class="brand" id="homeLink" type="button">
     <div class="brand-mark">QC</div>
     <div class="brand-text">
       <div class="t1">Coal QC Tracker</div>
       <div class="t2">PSD · DENSITY · PLATED</div>
     </div>
+  </button>
+  <button class="back-btn" id="backBtn" style="display:none;" type="button">← Back</button>
+</header>
+
+<main>
+
+  <!-- ============ HOME ============ -->
+  <section id="screen-home" class="screen active">
+    <div class="home-wrap">
+      <div class="home-logo">QC</div>
+      <h1 class="home-title">Coal QC Tracker</h1>
+      <p class="home-sub">Choose what you want to do</p>
+      <div class="home-actions">
+        <button class="home-btn primary" id="goInputSample" type="button">
+          <span class="icon">＋</span> INPUT SAMPLE
+          <span class="cap">Log a new test</span>
+        </button>
+        <button class="home-btn secondary" id="goReport" type="button">
+          <span class="icon">▤</span> REPORT
+          <span class="cap">View & export results</span>
+        </button>
+      </div>
+      <button class="counter-link" id="counterAdjustBtn" type="button">Set next bottle number</button>
+    </div>
+  </section>
+
+  <!-- ============ ENTRY: MACHINE ============ -->
+  <section id="screen-entry-machine" class="screen">
+    <div class="section-head">
+      <div class="eyebrow">Input Sample · Step 1 of 3</div>
+      <h1>Select Machine</h1>
+      <p class="sub">Which machine made this bag?</p>
+    </div>
+    <div class="choice-grid">
+      <button type="button" class="choice-btn" data-machine="Machine 1">MACHINE 1<span class="tag">Calcan line</span></button>
+      <button type="button" class="choice-btn" data-machine="Machine 2">MACHINE 2<span class="tag">Sudan line</span></button>
+    </div>
+  </section>
+
+  <!-- ============ ENTRY: SIZE ============ -->
+  <section id="screen-entry-size" class="screen">
+    <div class="section-head">
+      <div class="eyebrow">Input Sample · Step 2 of 3</div>
+      <h1>Select Size</h1>
+      <p class="sub" id="entrySizeSub">Machine: —</p>
+    </div>
+    <div class="choice-grid" id="entrySizeGrid"></div>
+  </section>
+
+  <!-- ============ ENTRY: FORM ============ -->
+  <section id="screen-entry-form" class="screen">
+    <div class="section-head">
+      <div class="eyebrow">Input Sample · Step 3 of 3</div>
+      <h1>Test Results</h1>
+      <p class="sub" id="entryFormSub">Machine: — · Size: —</p>
+    </div>
+
+    <div class="bottle-banner">
+      <div>
+        <div class="lbl">This sample will be</div>
+        <div class="num">Bottle #<span id="bottlePreview">…</span></div>
+      </div>
+      <div class="ctx">Tap a box below to enter values</div>
+    </div>
+
+    <div id="entryMsg" class="msg"></div>
+
+    <form id="entryForm">
+      <div class="card">
+        <div class="group-label">PSD — Sieve Weight (g)</div>
+        <div class="grid" id="sieveInputs"></div>
+      </div>
+
+      <div class="card">
+        <div class="group-label">Density</div>
+        <div class="grid">
+          <div class="field">
+            <label for="fDensity">100ml Sample Weight (g)</label>
+            <input type="text" inputmode="none" readonly class="num-field" id="fDensity" data-label="Density — 100ml Weight (g)">
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="platedCard" style="display:none;">
+        <div class="group-label">Plated</div>
+        <div class="grid">
+          <div class="field">
+            <label for="fPlated">Plated Value (g)</label>
+            <input type="text" inputmode="none" readonly class="num-field" id="fPlated" data-label="Plated Value (g)">
+          </div>
+        </div>
+      </div>
+
+      <div class="submit-row">
+        <button type="button" class="btn btn-ghost" id="clearFormBtn">Clear</button>
+        <button type="submit" class="btn btn-primary" id="submitBtn">Save Sample</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ============ REPORT: MACHINE ============ -->
+  <section id="screen-report-machine" class="screen">
+    <div class="section-head">
+      <div class="eyebrow">Report · Step 1 of 3</div>
+      <h1>Select Machine</h1>
+    </div>
+    <div class="choice-grid">
+      <button type="button" class="choice-btn" data-report-machine="Machine 1">MACHINE 1<span class="tag">Calcan line</span></button>
+      <button type="button" class="choice-btn" data-report-machine="Machine 2">MACHINE 2<span class="tag">Sudan line</span></button>
+    </div>
+  </section>
+
+  <!-- ============ REPORT: SIZE ============ -->
+  <section id="screen-report-size" class="screen">
+    <div class="section-head">
+      <div class="eyebrow">Report · Step 2 of 3</div>
+      <h1>Select Size</h1>
+      <p class="sub" id="reportSizeSub">Machine: —</p>
+    </div>
+    <div class="choice-grid" id="reportSizeGrid"></div>
+  </section>
+
+  <!-- ============ REPORT: VIEW ============ -->
+  <section id="screen-report-view" class="screen">
+    <div class="section-head">
+      <div class="eyebrow">Report · Step 3 of 3</div>
+      <h1>Sample Report</h1>
+      <p class="sub">Filter by date and export a PDF.</p>
+    </div>
+
+    <div class="context-bar">
+      <div class="context-pill">MACHINE: <b id="ctxMachine">—</b></div>
+      <div class="context-pill">SIZE: <b id="ctxSize">—</b></div>
+    </div>
+
+    <div class="card">
+      <div class="filter-row">
+        <div class="field">
+          <label for="rFrom">From</label>
+          <input type="date" id="rFrom">
+        </div>
+        <div class="field">
+          <label for="rTo">To</label>
+          <input type="date" id="rTo">
+        </div>
+        <div class="filter-actions">
+          <button class="btn btn-ghost" id="todayBtn" type="button">Today</button>
+          <button class="btn btn-primary" id="searchBtn" type="button">Search</button>
+          <button class="btn btn-ghost" id="pdfBtn" type="button">Download PDF</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-summary"><span class="count-pill" id="resultCount">Run a search</span></div>
+
+    <div class="table-wrap">
+      <table id="resultTable">
+        <thead>
+          <tr class="group-row">
+            <th colspan="2">Sample</th>
+            <th colspan="6">PSD (g)</th>
+            <th class="density-group">Density</th>
+            <th class="plated-group">Plated</th>
+          </tr>
+          <tr class="field-row">
+            <th>Date</th><th>Bottle #</th>
+            <th>+6</th><th>6x8</th><th>6x10</th><th>6x12</th><th>6x14</th><th>-14</th>
+            <th class="density-group">g / 100ml</th>
+            <th class="plated-group">g</th>
+          </tr>
+        </thead>
+        <tbody id="resultBody"></tbody>
+      </table>
+      <div id="emptyState" class="empty-state" style="display:none;">
+        <div class="big">—</div>
+        <div>No results. Try a different date range.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>Coal QC Tracker · Internal use</footer>
+
+<!-- Custom numeric keypad -->
+<div class="keypad-overlay" id="keypadOverlay">
+  <div class="keypad-sheet">
+    <div class="keypad-top">
+      <span class="keypad-label" id="keypadLabel">Field</span>
+      <button class="keypad-close" id="keypadClose" type="button">×</button>
+    </div>
+    <div class="keypad-preview" id="keypadPreview">0</div>
+    <div class="keypad-grid">
+      <button type="button" data-key="1">1</button>
+      <button type="button" data-key="2">2</button>
+      <button type="button" data-key="3">3</button>
+      <button type="button" data-key="4">4</button>
+      <button type="button" data-key="5">5</button>
+      <button type="button" data-key="6">6</button>
+      <button type="button" data-key="7">7</button>
+      <button type="button" data-key="8">8</button>
+      <button type="button" data-key="9">9</button>
+      <button type="button" data-key=".">.</button>
+      <button type="button" data-key="0">0</button>
+      <button type="button" class="kp-back" data-key="back">⌫</button>
+      <button type="button" class="keypad-ok" data-key="ok">OK — Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+/* ================= CONFIG ================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyAjwlQfgrzsVIYtIhwqckX56eeC48xRqCM",
+  authDomain: "factory-qc-tracker.firebaseapp.com",
+  databaseURL: "https://factory-qc-tracker-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "factory-qc-tracker",
+  storageBucket: "factory-qc-tracker.firebasestorage.app",
+  messagingSenderId: "9502141528",
+  appId: "1:9502141528:web:68cecd30a1a97a293a6e2d",
+  measurementId: "G-Z4CW9200ED"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const SIZES = ['6x12(1)', '6x12(2)', '12x40', '-30'];
+const SIEVES = {
+  '6x12(1)': ['+6', '6x8', '6x10', '6x12', '6x14', '-14'],
+  '6x12(2)': ['+6', '6x8', '6x10', '6x12', '6x14', '-14'],
+  '12x40':   ['+6', '6x8', '6x10', '6x12', '6x14', '-14'],
+  '-30':     ['+6', '6x8', '6x10', '6x12', '6x14', '-14']
+};
+const PLATED_SIZES = ['6x12(1)'];
+const SIEVE_KEYS = { '+6':'p_plus6', '6x8':'p_6x8', '6x10':'p_6x10', '6x12':'p_6x12', '6x14':'p_6x14', '-14':'p_minus14' };
+const COMPUTED_INDEX = 1; // second sieve column is auto-calculated, not typed
+const BOTTLE_START = 254; // starting bottle number
+
+/* ================= SCREEN NAVIGATION ================= */
+const PARENT = {
+  'screen-entry-machine': 'screen-home',
+  'screen-entry-size': 'screen-entry-machine',
+  'screen-entry-form': 'screen-entry-size',
+  'screen-report-machine': 'screen-home',
+  'screen-report-size': 'screen-report-machine',
+  'screen-report-view': 'screen-report-size'
+};
+let currentScreen = 'screen-home';
+const backBtn = document.getElementById('backBtn');
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  currentScreen = id;
+  backBtn.style.display = (id === 'screen-home') ? 'none' : 'flex';
+  window.scrollTo(0,0);
+  if (id === 'screen-entry-form') refreshBottlePreview();
+}
+backBtn.addEventListener('click', () => { showScreen(PARENT[currentScreen] || 'screen-home'); });
+document.getElementById('homeLink').addEventListener('click', () => showScreen('screen-home'));
+
+/* ================= HOME ================= */
+document.getElementById('goInputSample').addEventListener('click', () => showScreen('screen-entry-machine'));
+document.getElementById('goReport').addEventListener('click', () => showScreen('screen-report-machine'));
+
+document.getElementById('counterAdjustBtn').addEventListener('click', async () => {
+  const val = prompt('Set the NEXT bottle number (1-1000):');
+  if (val === null) return;
+  const n = parseInt(val, 10);
+  if (isNaN(n) || n < 1 || n > 1000){ alert('Enter a number between 1 and 1000.'); return; }
+  try{
+    await db.collection('counters').doc('bottle').set({ current: n - 1 }, { merge: true });
+    alert('Done. Next sample will be Bottle #' + n);
+  }catch(e){ alert('Could not update: ' + e.message); }
+});
+
+/* ================= ENTRY: MACHINE ================= */
+const entryState = { machine: null, size: null };
+document.querySelectorAll('#screen-entry-machine [data-machine]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    entryState.machine = btn.dataset.machine;
+    document.getElementById('entrySizeSub').textContent = 'Machine: ' + entryState.machine;
+    showScreen('screen-entry-size');
+  });
+});
+
+/* ================= ENTRY: SIZE ================= */
+const entrySizeGrid = document.getElementById('entrySizeGrid');
+SIZES.forEach(s => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'choice-btn'; b.dataset.size = s;
+  b.innerHTML = `${s}` + (PLATED_SIZES.includes(s) ? '<span class="tag">PSD · Density · Plated</span>' : '<span class="tag">PSD · Density</span>');
+  entrySizeGrid.appendChild(b);
+});
+entrySizeGrid.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-size]');
+  if (!btn) return;
+  entryState.size = btn.dataset.size;
+  document.getElementById('entryFormSub').textContent = `Machine: ${entryState.machine} · Size: ${entryState.size}`;
+  buildEntryForm(entryState.size);
+  showScreen('screen-entry-form');
+});
+
+/* ================= ENTRY: FORM BUILD ================= */
+const sieveInputsEl = document.getElementById('sieveInputs');
+const platedCard = document.getElementById('platedCard');
+const entryMsg = document.getElementById('entryMsg');
+let chainList = []; // ordered list of {el, label} for keypad auto-advance
+
+function buildEntryForm(size){
+  const list = SIEVES[size];
+  sieveInputsEl.innerHTML = '';
+  chainList = [];
+
+  list.forEach((name, idx) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'field';
+    if (idx === COMPUTED_INDEX){
+      wrap.innerHTML = `<label>${name}</label><input type="text" class="num-field computed" data-sieve="${name}" readonly value="" placeholder="Auto">
+        <div class="field-note">Auto-calculated (100 − others)</div>`;
+    } else {
+      wrap.innerHTML = `<label>${name}</label><input type="text" inputmode="none" readonly class="num-field" data-sieve="${name}" data-label="Sieve ${name} (g)" value="">`;
+    }
+    sieveInputsEl.appendChild(wrap);
+  });
+
+  // build chain: sieves except computed, then density, then plated if applicable
+  document.querySelectorAll('#sieveInputs input[data-sieve]:not(.computed)').forEach(inp => {
+    chainList.push(inp);
+  });
+  chainList.push(document.getElementById('fDensity'));
+
+  const isPlated = PLATED_SIZES.includes(size);
+  platedCard.style.display = isPlated ? 'block' : 'none';
+  if (isPlated) chainList.push(document.getElementById('fPlated'));
+
+  // reset values
+  document.getElementById('fDensity').value = '';
+  document.getElementById('fPlated').value = '';
+  document.querySelectorAll('.num-field').forEach(el => el.classList.remove('filled','active-field'));
+
+  attachKeypadHandlers();
+}
+
+document.getElementById('clearFormBtn').addEventListener('click', () => buildEntryForm(entryState.size));
+
+/* ================= CUSTOM KEYPAD ================= */
+const keypadOverlay = document.getElementById('keypadOverlay');
+const keypadLabel = document.getElementById('keypadLabel');
+const keypadPreview = document.getElementById('keypadPreview');
+let activeInput = null;
+let tempValue = '';
+
+function attachKeypadHandlers(){
+  chainList.forEach(inp => {
+    inp.onclick = () => openKeypadFor(inp);
+  });
+}
+
+function openKeypadFor(inputEl){
+  document.querySelectorAll('.num-field').forEach(el => el.classList.remove('active-field'));
+  inputEl.classList.add('active-field');
+  activeInput = inputEl;
+  tempValue = inputEl.value || '';
+  keypadLabel.textContent = inputEl.dataset.label || 'Value';
+  keypadPreview.textContent = tempValue === '' ? '0' : tempValue;
+  keypadOverlay.classList.add('show');
+}
+
+function closeKeypad(){
+  keypadOverlay.classList.remove('show');
+  document.querySelectorAll('.num-field').forEach(el => el.classList.remove('active-field'));
+  activeInput = null;
+}
+
+document.getElementById('keypadClose').addEventListener('click', closeKeypad);
+
+document.querySelectorAll('.keypad-grid [data-key]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const key = btn.dataset.key;
+    if (!activeInput) return;
+
+    if (key === 'back'){
+      tempValue = tempValue.slice(0, -1);
+      keypadPreview.textContent = tempValue === '' ? '0' : tempValue;
+      return;
+    }
+    if (key === 'ok'){
+      commitActiveValue();
+      return;
+    }
+    if (key === '.' && tempValue.includes('.')) return;
+    tempValue += key;
+    keypadPreview.textContent = tempValue;
+  });
+});
+
+function commitActiveValue(){
+  if (!activeInput) return;
+  const val = tempValue === '' || tempValue === '.' ? '' : tempValue;
+  activeInput.value = val;
+  activeInput.classList.toggle('filled', val !== '');
+  activeInput.classList.remove('active-field');
+
+  if (activeInput.dataset.sieve) recalcComputedSieve();
+
+  const idx = chainList.indexOf(activeInput);
+  if (idx >= 0 && idx < chainList.length - 1){
+    openKeypadFor(chainList[idx + 1]);
+  } else {
+    closeKeypad();
+  }
+}
+
+function recalcComputedSieve(){
+  const size = entryState.size;
+  if (!size) return;
+  const list = SIEVES[size];
+  const computedName = list[COMPUTED_INDEX];
+  const otherNames = list.filter((n, i) => i !== COMPUTED_INDEX);
+  let sum = 0, allFilled = true;
+  otherNames.forEach(n => {
+    const el = document.querySelector(`#sieveInputs input[data-sieve="${n}"]`);
+    const v = parseFloat(el.value);
+    if (isNaN(v)) allFilled = false; else sum += v;
+  });
+  const computedEl = document.querySelector(`#sieveInputs input[data-sieve="${computedName}"]`);
+  if (allFilled){
+    let val = 100 - sum;
+    if (val < 0) val = 0;
+    computedEl.value = val.toFixed(2);
+    computedEl.classList.add('filled');
+  } else {
+    computedEl.value = '';
+    computedEl.classList.remove('filled');
+  }
+}
+
+/* ================= BOTTLE NUMBER ================= */
+async function refreshBottlePreview(){
+  const el = document.getElementById('bottlePreview');
+  el.textContent = '…';
+  try{
+    const doc = await db.collection('counters').doc('bottle').get();
+    let current = doc.exists ? (doc.data().current || (BOTTLE_START - 1)) : (BOTTLE_START - 1);
+    let next = current + 1;
+    if (next > 1000) next = 1;
+    el.textContent = next;
+  }catch(e){
+    el.textContent = '—';
+  }
+}
+
+async function getNextBottleNumber(){
+  const ref = db.collection('counters').doc('bottle');
+  return db.runTransaction(async t => {
+    const doc = await t.get(ref);
+    let current = doc.exists ? (doc.data().current || (BOTTLE_START - 1)) : (BOTTLE_START - 1);
+    let n = current + 1;
+    if (n > 1000) n = 1;
+    t.set(ref, { current: n }, { merge: true });
+    return n;
+  });
+}
+
+/* ================= SUBMIT ================= */
+function showMsg(el, type, text){
+  el.className = 'msg show ' + type;
+  el.textContent = text;
+  setTimeout(() => el.classList.remove('show'), 5000);
+}
+
+document.getElementById('entryForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!entryState.machine || !entryState.size){
+    showMsg(entryMsg, 'err', 'Select a machine and size first.');
+    return;
+  }
+  const size = entryState.size;
+  const psd = {};
+  let missing = false;
+  document.querySelectorAll('#sieveInputs input[data-sieve]').forEach(inp => {
+    const v = parseFloat(inp.value);
+    if (isNaN(v)) missing = true;
+    psd[SIEVE_KEYS[inp.dataset.sieve]] = v;
+  });
+  const densityVal = parseFloat(document.getElementById('fDensity').value);
+  if (isNaN(densityVal)) missing = true;
+  let platedVal = null;
+  if (PLATED_SIZES.includes(size)){
+    platedVal = parseFloat(document.getElementById('fPlated').value);
+    if (isNaN(platedVal)) missing = true;
+  }
+  if (missing){
+    showMsg(entryMsg, 'err', 'Fill in all fields before saving.');
+    return;
+  }
+
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Saving…';
+
+  try{
+    const bottleNumber = await getNextBottleNumber();
+    const record = {
+      date: new Date().toISOString().slice(0,10),
+      machine: entryState.machine,
+      size: size,
+      bottleNumber: bottleNumber,
+      psd: psd,
+      density: densityVal,
+      plated: platedVal,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    await db.collection('samples').add(record);
+    showMsg(entryMsg, 'ok', `Saved — Bottle #${bottleNumber} · ${entryState.machine} · ${size}`);
+    buildEntryForm(size);
+    refreshBottlePreview();
+  }catch(err){
+    console.error(err);
+    showMsg(entryMsg, 'err', 'Could not save: ' + err.message);
+  }finally{
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Save Sample';
+  }
+});
+
+/* ================= REPORT: MACHINE / SIZE ================= */
+const reportState = { machine: null, size: null };
+document.querySelectorAll('#screen-report-machine [data-report-machine]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    reportState.machine = btn.dataset.reportMachine;
+    document.getElementById('reportSizeSub').textContent = 'Machine: ' + reportState.machine;
+    showScreen('screen-report-size');
+  });
+});
+
+const reportSizeGrid = document.getElementById('reportSizeGrid');
+SIZES.forEach(s => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'choice-btn'; b.dataset.reportSize = s;
+  b.textContent = s;
+  reportSizeGrid.appendChild(b);
+});
+reportSizeGrid.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-report-size]');
+  if (!btn) return;
+  reportState.size = btn.dataset.reportSize;
+  document.getElementById('ctxMachine').textContent = reportState.machine;
+  document.getElementById('ctxSize').textContent = reportState.size;
+  lastResults = [];
+  renderResults();
+  document.getElementById('resultCount').textContent = 'Run a search';
+  showScreen('screen-report-view');
+});
+
+document.getElementById('todayBtn').addEventListener('click', () => {
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById('rFrom').value = today;
+  document.getElementById('rTo').value = today;
+  runSearch();
+});
+
+/* ================= REPORT: SEARCH ================= */
+const resultBody = document.getElementById('resultBody');
+const resultCount = document.getElementById('resultCount');
+const emptyState = document.getElementById('emptyState');
+const resultTable = document.getElementById('resultTable');
+let lastResults = [];
+
+async function runSearch(){
+  if (!reportState.machine || !reportState.size) return;
+  resultCount.textContent = 'Searching…';
+  let q = db.collection('samples')
+    .where('machine', '==', reportState.machine)
+    .where('size', '==', reportState.size);
+
+  const from = document.getElementById('rFrom').value;
+  const to = document.getElementById('rTo').value;
+  if (from) q = q.where('date', '>=', from);
+  if (to) q = q.where('date', '<=', to);
+
+  try{
+    const snap = await q.get();
+    lastResults = [];
+    snap.forEach(doc => lastResults.push(doc.data()));
+    lastResults.sort((a,b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : a.bottleNumber - b.bottleNumber));
+    renderResults();
+  }catch(err){
+    console.error(err);
+    resultCount.textContent = 'Error: ' + err.message;
+  }
+}
+
+function renderResults(){
+  resultBody.innerHTML = '';
+  if (lastResults.length === 0){
+    resultTable.style.display = 'none';
+    emptyState.style.display = 'block';
+    return;
+  }
+  resultTable.style.display = 'table';
+  emptyState.style.display = 'none';
+  resultCount.textContent = lastResults.length + ' results';
+
+  lastResults.forEach(r => {
+    const tr = document.createElement('tr');
+    const p = r.psd || {};
+    tr.innerHTML = `
+      <td>${r.date || ''}</td>
+      <td>${r.bottleNumber ?? ''}</td>
+      <td>${fmt(p.p_plus6)}</td><td>${fmt(p.p_6x8)}</td><td>${fmt(p.p_6x10)}</td>
+      <td>${fmt(p.p_6x12)}</td><td>${fmt(p.p_6x14)}</td><td>${fmt(p.p_minus14)}</td>
+      <td class="density-cell">${fmt(r.density)}</td>
+      <td class="plated-cell">${(r.plated !== null && r.plated !== undefined && !Number.isNaN(r.plated)) ? fmt(r.plated) : '—'}</td>
+    `;
+    resultBody.appendChild(tr);
+  });
+}
+function fmt(v){ return (v === undefined || v === null || Number.isNaN(v)) ? '—' : v; }
+
+document.getElementById('searchBtn').addEventListener('click', runSearch);
+
+/* ================= PDF EXPORT ================= */
+document.getElementById('pdfBtn').addEventListener('click', () => {
+  if (!reportState.machine || !reportState.size) return;
+  if (lastResults.length === 0){ runSearch().then(exportPdf); return; }
+  exportPdf();
+});
+
+function exportPdf(){
+  if (lastResults.length === 0) return;
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'landscape' });
+
+  doc.setFontSize(16);
+  doc.setTextColor(30,26,21);
+  doc.text('Coal QC Sample Report', 14, 16);
+
+  doc.setFontSize(11);
+  doc.setTextColor(201,131,47);
+  doc.text(`MACHINE: ${reportState.machine}`, 14, 24);
+  doc.setTextColor(90,84,74);
+  doc.setFontSize(9);
+  const from = document.getElementById('rFrom').value || 'Start';
+  const to = document.getElementById('rTo').value || 'Today';
+  doc.text(`Size: ${reportState.size}   |   Period: ${from} - ${to}   |   Generated: ${new Date().toLocaleString()}`, 14, 30);
+
+  const cols = ['Date','Bottle#','+6','6x8','6x10','6x12','6x14','-14','Density (g)','Plated (g)'];
+  const rows = lastResults.map(r => {
+    const p = r.psd || {};
+    return [
+      r.date || '', r.bottleNumber ?? '',
+      fmt(p.p_plus6), fmt(p.p_6x8), fmt(p.p_6x10), fmt(p.p_6x12), fmt(p.p_6x14), fmt(p.p_minus14),
+      fmt(r.density),
+      (r.plated !== null && r.plated !== undefined && !Number.isNaN(r.plated)) ? fmt(r.plated) : '—'
+    ];
+  });
+
+  doc.autoTable({
+    head: [cols], body: rows, startY: 35, styles: { fontSize: 8, cellPadding: 2.2 },
+    headStyles: { fillColor: [21,19,15], textColor: [245,241,232] },
+    alternateRowStyles: { fillColor: [246,243,236] },
+    columnStyles: { 8: { fillColor: [228,239,243] }, 9: { fillColor: [246,236,211] } }
+  });
+
+  doc.save(`qc-report-${reportState.machine}-${reportState.size}-${from}_to_${to}.pdf`.replace(/\s+/g,'_'));
+}
+</script>
+</body>
+</html>iv>
   </div>
   <nav class="tabs">
     <button class="active" data-view="entry">New Sample</button>
