@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="si">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QC ට්‍රැකර් — Coal Sample Testing</title>
+<title>Coal QC Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
   :root{
@@ -17,15 +17,18 @@
     --paper:#f5f1e8;
     --paper-dim:#ece6d8;
     --ember:#c9832f;
-    --ember-dim:#a8692183;
     --ember-bright:#e29c48;
     --moss:#54785a;
     --moss-bg:#e7eee0;
     --rust:#a5432e;
     --rust-bg:#f4e1dc;
+    --density-tint:#eaf1f4;
+    --density-ink:#3b6b7a;
+    --plated-tint:#f4ecda;
+    --plated-ink:#8a6a1f;
     --line:#d9d0bd;
-    --radius:10px;
-    --shadow:0 1px 2px rgba(21,19,15,.08), 0 8px 24px rgba(21,19,15,.06);
+    --radius:12px;
+    --shadow:0 1px 2px rgba(21,19,15,.08), 0 10px 28px rgba(21,19,15,.07);
   }
 
   *{box-sizing:border-box;}
@@ -33,13 +36,11 @@
   body{
     background:var(--paper);
     color:var(--coal-900);
-    font-family:'Noto Sans Sinhala','IBM Plex Mono',sans-serif;
+    font-family:'IBM Plex Mono',monospace;
     min-height:100vh;
   }
-  .mono{font-family:'IBM Plex Mono',monospace;}
   .display{font-family:'Archivo',sans-serif;}
 
-  /* ---------- Header ---------- */
   header.topbar{
     background:var(--coal-950);
     color:var(--paper);
@@ -50,32 +51,25 @@
     height:64px;
     position:sticky;
     top:0;
-    z-index:50;
+    z-index:60;
     border-bottom:3px solid var(--ember);
   }
-  .brand{
-    display:flex;
-    align-items:center;
-    gap:12px;
-  }
+  .brand{display:flex;align-items:center;gap:12px;}
   .brand-mark{
-    width:34px;height:34px;
-    border-radius:8px;
+    width:34px;height:34px;border-radius:8px;
     background:linear-gradient(155deg,var(--ember),#8f5518);
     display:flex;align-items:center;justify-content:center;
-    font-family:'Archivo',sans-serif;font-weight:900;color:var(--coal-950);
-    font-size:15px;
-    flex-shrink:0;
+    font-family:'Archivo',sans-serif;font-weight:900;color:var(--coal-950);font-size:15px;flex-shrink:0;
   }
   .brand-text .t1{font-family:'Archivo',sans-serif;font-weight:900;font-size:17px;letter-spacing:.2px;line-height:1.1;}
-  .brand-text .t2{font-size:11px;color:var(--ash-300);letter-spacing:.5px;font-family:'IBM Plex Mono',monospace;}
+  .brand-text .t2{font-size:10.5px;color:var(--ash-300);letter-spacing:2px;font-family:'IBM Plex Mono',monospace;}
 
   nav.tabs{display:flex;gap:4px;background:var(--coal-900);padding:4px;border-radius:10px;}
   nav.tabs button{
     appearance:none;border:none;background:transparent;color:var(--ash-300);
-    padding:9px 16px;border-radius:7px;cursor:pointer;
-    font-family:'Noto Sans Sinhala',sans-serif;font-size:14px;font-weight:600;
-    transition:.15s;
+    padding:9px 18px;border-radius:7px;cursor:pointer;
+    font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;letter-spacing:.3px;
+    transition:.15s;text-transform:uppercase;
   }
   nav.tabs button.active{background:var(--ember);color:var(--coal-950);}
   nav.tabs button:not(.active):hover{color:var(--paper);}
@@ -84,57 +78,52 @@
   .view{display:none;}
   .view.active{display:block;}
 
-  /* ---------- Section headings ---------- */
-  .section-head{margin-bottom:20px;}
+  .section-head{margin-bottom:22px;}
   .eyebrow{
-    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2.5px;
     text-transform:uppercase;color:var(--ember);font-weight:600;margin-bottom:6px;
   }
   h1{font-family:'Archivo',sans-serif;font-weight:900;font-size:26px;margin:0 0 4px;color:var(--coal-950);}
-  .sub{color:var(--ash-600);font-size:14px;margin:0;}
+  .sub{color:var(--ash-600);font-size:13.5px;margin:0;}
 
-  /* ---------- Card ---------- */
-  .card{
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-    padding:22px;
-    margin-bottom:20px;
+  .step{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden;
+    transition:opacity .2s;
   }
-  .card h2{font-family:'Archivo',sans-serif;font-size:15px;font-weight:700;margin:0 0 16px;
-    display:flex;align-items:center;gap:8px;color:var(--coal-950);}
-  .card h2 .num{
-    width:22px;height:22px;border-radius:6px;background:var(--coal-900);color:var(--ember-bright);
-    display:flex;align-items:center;justify-content:center;font-size:11px;font-family:'IBM Plex Mono',monospace;
-    flex-shrink:0;
+  .step.locked{opacity:.45;pointer-events:none;}
+  .step-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 22px;
+  }
+  .step-head .left{display:flex;align-items:center;gap:12px;}
+  .step-num{
+    width:26px;height:26px;border-radius:7px;background:var(--coal-900);color:var(--ember-bright);
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;
+  }
+  .step.done .step-num{background:var(--moss);color:#fff;}
+  .step-title{font-family:'Archivo',sans-serif;font-weight:800;font-size:14px;letter-spacing:.3px;text-transform:uppercase;color:var(--coal-950);}
+  .step-value{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ash-600);margin-top:2px;}
+  .step-body{padding:0 22px 22px;}
+  .link-btn{
+    background:none;border:none;color:var(--ember);font-family:'IBM Plex Mono',monospace;
+    font-size:12px;font-weight:600;cursor:pointer;text-decoration:underline;padding:4px;
   }
 
-  /* ---------- Bottle gauge (signature element) ---------- */
-  .gauge-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
-  .gauge{position:relative;width:92px;height:92px;flex-shrink:0;}
-  .gauge svg{transform:rotate(-90deg);}
-  .gauge-num{
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:22px;color:var(--coal-950);
-  }
-  .gauge-meta{flex:1;min-width:180px;}
-  .gauge-meta .lbl{font-size:12px;color:var(--ash-600);margin-bottom:4px;}
-  .gauge-meta .cycle{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--coal-800);}
-  .btn{
-    appearance:none;border:none;border-radius:8px;padding:10px 16px;
-    font-family:'Noto Sans Sinhala',sans-serif;font-weight:600;font-size:14px;cursor:pointer;
+  .choice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+  .choice-btn{
+    appearance:none;border:2px solid var(--line);background:var(--paper);
+    border-radius:10px;padding:20px 14px;cursor:pointer;text-align:center;
+    font-family:'Archivo',sans-serif;font-weight:800;font-size:16px;color:var(--coal-950);
     transition:.15s;
   }
-  .btn-primary{background:var(--ember);color:var(--coal-950);}
-  .btn-primary:hover{background:var(--ember-bright);}
-  .btn-ghost{background:var(--paper-dim);color:var(--coal-900);border:1px solid var(--line);}
-  .btn-ghost:hover{background:var(--line);}
-  .btn:disabled{opacity:.5;cursor:not-allowed;}
+  .choice-btn .tag{display:block;font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:11px;color:var(--ash-600);margin-top:4px;text-transform:none;}
+  .choice-btn:hover{border-color:var(--ember);transform:translateY(-2px);}
+  .choice-btn.selected{border-color:var(--ember);background:var(--coal-950);color:var(--paper);}
+  .choice-btn.selected .tag{color:var(--ash-300);}
 
-  /* ---------- Form ---------- */
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;}
-  label{display:block;font-size:12.5px;color:var(--ash-600);margin-bottom:5px;font-weight:600;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;}
+  label{display:block;font-size:11.5px;color:var(--ash-600);margin-bottom:5px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;}
   input,select{
     width:100%;padding:10px 11px;border:1.5px solid var(--line);border-radius:8px;
     font-family:'IBM Plex Mono',monospace;font-size:14px;background:var(--paper);color:var(--coal-950);
@@ -142,35 +131,58 @@
   input:focus,select:focus{outline:2px solid var(--ember);outline-offset:1px;border-color:var(--ember);}
   .field{margin-bottom:0;}
   .divider{height:1px;background:var(--line);margin:20px 0;}
-  .machine-badge{
-    display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;
-    background:var(--coal-900);color:var(--ember-bright);font-size:12px;font-family:'IBM Plex Mono',monospace;
-    font-weight:600;
+  .group-label{font-family:'Archivo',sans-serif;font-size:12.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--coal-800);margin-bottom:10px;}
+
+  .btn{
+    appearance:none;border:none;border-radius:8px;padding:11px 18px;
+    font-family:'Archivo',sans-serif;font-weight:700;font-size:13px;cursor:pointer;
+    transition:.15s;letter-spacing:.3px;text-transform:uppercase;
   }
-  .sieve-tag{
-    font-size:10.5px;color:var(--ash-600);font-family:'IBM Plex Mono',monospace;margin-top:4px;
-  }
+  .btn-primary{background:var(--ember);color:var(--coal-950);}
+  .btn-primary:hover{background:var(--ember-bright);}
+  .btn-ghost{background:var(--paper-dim);color:var(--coal-900);border:1px solid var(--line);}
+  .btn-ghost:hover{background:var(--line);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+
   .submit-row{display:flex;justify-content:flex-end;gap:10px;margin-top:22px;}
-  .msg{font-size:13px;padding:10px 14px;border-radius:8px;margin-bottom:16px;display:none;}
+  .msg{font-size:13px;padding:11px 14px;border-radius:8px;margin-bottom:16px;display:none;font-family:'IBM Plex Mono',monospace;}
   .msg.show{display:block;}
   .msg.ok{background:var(--moss-bg);color:var(--moss);}
   .msg.err{background:var(--rust-bg);color:var(--rust);}
 
-  /* ---------- Report filters ---------- */
+  .context-bar{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    background:var(--coal-950);color:var(--paper);padding:12px 18px;border-radius:10px;margin-bottom:18px;
+  }
+  .context-pill{
+    background:var(--coal-800);padding:5px 12px;border-radius:20px;font-size:12px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .context-pill b{color:var(--ember-bright);}
+  .context-bar .link-btn{color:var(--ember-bright);margin-left:auto;}
+
   .filter-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;}
   .filter-row .field{min-width:150px;flex:1;}
-  .filter-actions{display:flex;gap:10px;}
+  .filter-actions{display:flex;gap:10px;flex-wrap:wrap;}
 
-  /* ---------- Table ---------- */
-  .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);}
-  table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:820px;}
-  thead th{
-    background:var(--coal-950);color:var(--ash-300);text-align:start;padding:10px 10px;
-    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;letter-spacing:.4px;
-    text-transform:uppercase;white-space:nowrap;
+  .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:#fff;}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:900px;}
+  thead tr.group-row th{
+    background:var(--coal-950);color:var(--ash-300);padding:8px 10px;
+    font-family:'Archivo',sans-serif;font-weight:800;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;
+    border-bottom:1px solid var(--coal-800);text-align:center;
   }
+  thead tr.field-row th{
+    background:var(--coal-900);color:var(--ash-300);text-align:start;padding:9px 10px;
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;white-space:nowrap;
+  }
+  th.density-group, td.density-cell{background:var(--density-tint);color:var(--density-ink);}
+  th.plated-group, td.plated-cell{background:var(--plated-tint);color:var(--plated-ink);}
+  thead tr.group-row th.density-group{background:var(--density-ink);color:#fff;}
+  thead tr.group-row th.plated-group{background:var(--plated-ink);color:#fff;}
   tbody td{padding:9px 10px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;white-space:nowrap;}
-  tbody tr:hover{background:var(--paper-dim);}
+  tbody td.density-cell, tbody td.plated-cell{font-weight:700;}
+  tbody tr:hover td:not(.density-cell):not(.plated-cell){background:var(--paper-dim);}
   tbody tr:last-child td{border-bottom:none;}
   .empty-state{padding:44px 20px;text-align:center;color:var(--ash-600);}
   .empty-state .big{font-size:32px;margin-bottom:8px;}
@@ -178,13 +190,25 @@
   .result-summary{display:flex;align-items:center;justify-content:space-between;margin:16px 0 12px;flex-wrap:wrap;gap:10px;}
   .count-pill{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ash-600);}
 
-  footer{text-align:center;color:var(--ash-600);font-size:11.5px;padding:24px 0;font-family:'IBM Plex Mono',monospace;}
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(21,19,15,.72);
+    display:none;align-items:center;justify-content:center;z-index:100;padding:20px;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-card{
+    background:#fff;border-radius:16px;padding:28px;max-width:420px;width:100%;
+    box-shadow:0 24px 60px rgba(0,0,0,.35);
+  }
+  .modal-card .eyebrow{margin-bottom:8px;}
+  .modal-card h2{font-family:'Archivo',sans-serif;font-weight:900;font-size:20px;margin:0 0 18px;color:var(--coal-950);}
+
+  footer{text-align:center;color:var(--ash-600);font-size:11px;padding:24px 0;font-family:'IBM Plex Mono',monospace;}
 
   @media (max-width:640px){
     .brand-text .t2{display:none;}
-    nav.tabs button{padding:8px 12px;font-size:13px;}
+    nav.tabs button{padding:8px 12px;font-size:12px;}
     h1{font-size:21px;}
-    table{min-width:720px;}
+    table{min-width:760px;}
   }
 </style>
 </head>
@@ -194,13 +218,13 @@
   <div class="brand">
     <div class="brand-mark">QC</div>
     <div class="brand-text">
-      <div class="t1">Coal QC ට්‍රැකර්</div>
+      <div class="t1">Coal QC Tracker</div>
       <div class="t2">PSD · DENSITY · PLATED</div>
     </div>
   </div>
   <nav class="tabs">
-    <button class="active" data-view="entry">දත්ත ඇතුල් කිරීම</button>
-    <button data-view="report">වාර්තා</button>
+    <button class="active" data-view="entry">New Sample</button>
+    <button data-view="report">Reports</button>
   </nav>
 </header>
 
@@ -210,134 +234,170 @@
   <section id="view-entry" class="view active">
     <div class="section-head">
       <div class="eyebrow">Sample Entry</div>
-      <h1>Sample එකක් record කරන්න</h1>
-      <p class="sub">Size එක තෝරලා, sieve/density/plated අගයන් type කරලා save කරන්න.</p>
-    </div>
-
-    <div class="card">
-      <h2><span class="num">1</span> Bottle අංකය</h2>
-      <div class="gauge-row">
-        <div class="gauge">
-          <svg width="92" height="92" viewBox="0 0 92 92">
-            <circle cx="46" cy="46" r="40" fill="none" stroke="var(--paper-dim)" stroke-width="8"/>
-            <circle id="gaugeArc" cx="46" cy="46" r="40" fill="none" stroke="var(--ember)" stroke-width="8"
-                    stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
-          </svg>
-          <div class="gauge-num" id="bottleGaugeNum">—</div>
-        </div>
-        <div class="gauge-meta">
-          <div class="lbl">වත්මන් Bottle අංකය · 1–1000 cycle එකේ පිහිටීම</div>
-          <div class="cycle" id="cycleLabel">loading…</div>
-        </div>
-        <button class="btn btn-ghost" id="refreshBottleBtn" type="button">↻ නැවත ගන්න</button>
-      </div>
+      <h1>Log a New Sample</h1>
+      <p class="sub">Pick the machine, pick the size, then fill in the test results.</p>
     </div>
 
     <div id="entryMsg" class="msg"></div>
 
-    <form id="entryForm" class="card">
-      <h2><span class="num">2</span> Sample විස්තර</h2>
-      <div class="grid">
-        <div class="field">
-          <label for="fDate">දිනය</label>
-          <input type="date" id="fDate" required>
-        </div>
-        <div class="field">
-          <label for="fSize">Size</label>
-          <select id="fSize" required></select>
-        </div>
-        <div class="field">
-          <label>Machine</label>
-          <div style="padding-top:9px;"><span class="machine-badge" id="machineBadge">—</span></div>
-        </div>
-        <div class="field">
-          <label for="fBottle">Bottle අංකය</label>
-          <input type="number" id="fBottle" min="1" max="1000" required>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <h2><span class="num">3</span> PSD — Sieve බර (g)</h2>
-      <div class="sieve-tag" id="sieveTagLine"></div>
-      <div class="grid" id="sieveInputs" style="margin-top:12px;"></div>
-
-      <div class="divider"></div>
-
-      <h2><span class="num">4</span> Density</h2>
-      <div class="grid">
-        <div class="field">
-          <label for="fDensity">100ml Sample බර (g)</label>
-          <input type="number" step="0.01" id="fDensity" required>
-        </div>
-      </div>
-
-      <div id="platedBlock" style="display:none;">
-        <div class="divider"></div>
-        <h2><span class="num">5</span> Plated</h2>
-        <div class="grid">
-          <div class="field">
-            <label for="fPlated">Plated අගය (g)</label>
-            <input type="number" step="0.01" id="fPlated">
+    <!-- STEP 1: MACHINE -->
+    <div class="step done" id="stepMachine">
+      <div class="step-head">
+        <div class="left">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Select Machine</div>
+            <div class="step-value" id="machineValueLabel">Not selected</div>
           </div>
         </div>
       </div>
-
-      <div class="submit-row">
-        <button type="reset" class="btn btn-ghost">Clear</button>
-        <button type="submit" class="btn btn-primary" id="submitBtn">Sample එක Save කරන්න</button>
+      <div class="step-body">
+        <div class="choice-grid">
+          <button type="button" class="choice-btn" data-machine="Machine 1">MACHINE 1<span class="tag">Calcan line</span></button>
+          <button type="button" class="choice-btn" data-machine="Machine 2">MACHINE 2<span class="tag">Sudan line</span></button>
+        </div>
       </div>
-    </form>
+    </div>
+
+    <!-- STEP 2: SIZE -->
+    <div class="step locked" id="stepSize">
+      <div class="step-head">
+        <div class="left">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Select Size</div>
+            <div class="step-value" id="sizeValueLabel">Not selected</div>
+          </div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="choice-grid" id="sizeChoiceGrid"></div>
+      </div>
+    </div>
+
+    <!-- STEP 3: TEST DATA -->
+    <div class="step locked" id="stepData">
+      <div class="step-head">
+        <div class="left">
+          <div class="step-num">3</div>
+          <div><div class="step-title">Test Results</div></div>
+        </div>
+      </div>
+      <div class="step-body">
+        <form id="entryForm">
+          <div class="grid">
+            <div class="field">
+              <label for="fDate">Date</label>
+              <input type="date" id="fDate" required>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="group-label">PSD — Sieve Weight (g)</div>
+          <div class="grid" id="sieveInputs"></div>
+
+          <div class="divider"></div>
+          <div class="group-label">Density</div>
+          <div class="grid">
+            <div class="field">
+              <label for="fDensity">100ml Sample Weight (g)</label>
+              <input type="number" step="0.01" id="fDensity" required>
+            </div>
+          </div>
+
+          <div id="platedBlock" style="display:none;">
+            <div class="divider"></div>
+            <div class="group-label">Plated</div>
+            <div class="grid">
+              <div class="field">
+                <label for="fPlated">Plated Value (g)</label>
+                <input type="number" step="0.01" id="fPlated">
+              </div>
+            </div>
+          </div>
+
+          <div class="submit-row">
+            <button type="reset" class="btn btn-ghost" id="clearFormBtn">Clear</button>
+            <button type="submit" class="btn btn-primary" id="submitBtn">Save Sample</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </section>
 
   <!-- ============ REPORT VIEW ============ -->
   <section id="view-report" class="view">
     <div class="section-head">
       <div class="eyebrow">Reports</div>
-      <h1>Sample වාර්තා</h1>
-      <p class="sub">දිනය සහ size අනුව filter කරලා බලන්න, PDF එකක් download කරන්න.</p>
+      <h1>Sample Report</h1>
+      <p class="sub">Filter by date and export a clean PDF.</p>
     </div>
 
-    <div class="card">
-      <h2><span class="num">·</span> Filter</h2>
-      <div class="filter-row">
-        <div class="field">
-          <label for="rFrom">සිට (From)</label>
-          <input type="date" id="rFrom">
+    <div class="context-bar" id="reportContextBar" style="display:none;">
+      <div class="context-pill">MACHINE: <b id="ctxMachine">—</b></div>
+      <div class="context-pill">SIZE: <b id="ctxSize">—</b></div>
+      <button class="link-btn" id="changeContextBtn" type="button">Change</button>
+    </div>
+
+    <div class="step" id="reportSizeStep" style="display:none;">
+      <div class="step-head">
+        <div class="left">
+          <div class="step-num">2</div>
+          <div><div class="step-title">Select Size</div></div>
         </div>
-        <div class="field">
-          <label for="rTo">දක්වා (To)</label>
-          <input type="date" id="rTo">
-        </div>
-        <div class="field">
-          <label for="rSize">Size</label>
-          <select id="rSize"><option value="">සියල්ල</option></select>
-        </div>
-        <div class="filter-actions">
-          <button class="btn btn-primary" id="searchBtn" type="button">සොයන්න</button>
-          <button class="btn btn-ghost" id="pdfBtn" type="button">⭳ PDF</button>
-        </div>
+      </div>
+      <div class="step-body">
+        <div class="choice-grid" id="reportSizeGrid"></div>
       </div>
     </div>
 
-    <div class="result-summary">
-      <span class="count-pill" id="resultCount">සොයන්න click කරන්න</span>
-    </div>
+    <div id="reportBody" style="display:none;">
+      <div class="step">
+        <div class="step-body" style="padding-top:22px;">
+          <div class="filter-row">
+            <div class="field">
+              <label for="rFrom">From</label>
+              <input type="date" id="rFrom">
+            </div>
+            <div class="field">
+              <label for="rTo">To</label>
+              <input type="date" id="rTo">
+            </div>
+            <div class="filter-actions">
+              <button class="btn btn-ghost" id="todayBtn" type="button">Today</button>
+              <button class="btn btn-primary" id="searchBtn" type="button">Search</button>
+              <button class="btn btn-ghost" id="pdfBtn" type="button">Download PDF</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <div class="table-wrap">
-      <table id="resultTable">
-        <thead>
-          <tr>
-            <th>දිනය</th><th>Size</th><th>Machine</th><th>Bottle#</th>
-            <th>+6</th><th>6x8</th><th>6x10</th><th>6x12</th><th>6x14</th><th>-14</th>
-            <th>Density</th><th>Plated</th>
-          </tr>
-        </thead>
-        <tbody id="resultBody"></tbody>
-      </table>
-      <div id="emptyState" class="empty-state" style="display:none;">
-        <div class="big">📋</div>
-        <div>Results මින් නෑ. Filter එක වෙනස් කරලා try කරන්න.</div>
+      <div class="result-summary">
+        <span class="count-pill" id="resultCount">Run a search</span>
+      </div>
+
+      <div class="table-wrap">
+        <table id="resultTable">
+          <thead>
+            <tr class="group-row">
+              <th colspan="3">Sample</th>
+              <th colspan="6">PSD (g)</th>
+              <th class="density-group">Density</th>
+              <th class="plated-group">Plated</th>
+            </tr>
+            <tr class="field-row">
+              <th>Date</th><th>Machine</th><th>Bottle #</th>
+              <th>+6</th><th>6x8</th><th>6x10</th><th>6x12</th><th>6x14</th><th>-14</th>
+              <th class="density-group">g / 100ml</th>
+              <th class="plated-group">g</th>
+            </tr>
+          </thead>
+          <tbody id="resultBody"></tbody>
+        </table>
+        <div id="emptyState" class="empty-state" style="display:none;">
+          <div class="big">—</div>
+          <div>No results. Try a different date range.</div>
+        </div>
       </div>
     </div>
   </section>
@@ -345,6 +405,18 @@
 </main>
 
 <footer>Coal QC Tracker · Internal use</footer>
+
+<!-- Machine select modal for Reports -->
+<div class="modal-overlay" id="reportModal">
+  <div class="modal-card">
+    <div class="eyebrow">Reports</div>
+    <h2>Which machine?</h2>
+    <div class="choice-grid">
+      <button type="button" class="choice-btn" data-report-machine="Machine 1">MACHINE 1<span class="tag">Calcan line</span></button>
+      <button type="button" class="choice-btn" data-report-machine="Machine 2">MACHINE 2<span class="tag">Sudan line</span></button>
+    </div>
+  </div>
+</div>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
@@ -368,8 +440,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
+const MACHINES = ['Machine 1', 'Machine 2'];
 const SIZES = ['6x12(1)', '6x12(2)', '12x40', '-30'];
-const SIZE_MACHINE = { '6x12(1)': 'Calcan', '6x12(2)': 'Sudan', '12x40': '—', '-30': '—' };
 const SIEVES = {
   '6x12(1)': ['+6', '6x8', '6x10', '6x12', '6x14', '-14'],
   '6x12(2)': ['+6', '6x8', '6x10', '6x12', '6x14', '-14'],
@@ -378,6 +450,7 @@ const SIEVES = {
 };
 const PLATED_SIZES = ['6x12(1)'];
 const SIEVE_KEYS = { '+6':'p_plus6', '6x8':'p_6x8', '6x10':'p_6x10', '6x12':'p_6x12', '6x14':'p_6x14', '-14':'p_minus14' };
+const BOTTLE_START = 200; // temporary starting point
 
 /* ================= TAB NAV ================= */
 document.querySelectorAll('nav.tabs button').forEach(btn => {
@@ -386,31 +459,55 @@ document.querySelectorAll('nav.tabs button').forEach(btn => {
     btn.classList.add('active');
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById('view-' + btn.dataset.view).classList.add('active');
+    if (btn.dataset.view === 'report' && !reportState.machine) openReportModal();
   });
 });
 
-/* ================= ENTRY FORM SETUP ================= */
+/* ================= ENTRY: STATE ================= */
+const entryState = { machine: null, size: null };
 const fDate = document.getElementById('fDate');
-const fSize = document.getElementById('fSize');
-const fBottle = document.getElementById('fBottle');
-const machineBadge = document.getElementById('machineBadge');
 const sieveInputs = document.getElementById('sieveInputs');
-const sieveTagLine = document.getElementById('sieveTagLine');
 const platedBlock = document.getElementById('platedBlock');
 const entryMsg = document.getElementById('entryMsg');
-const rSize = document.getElementById('rSize');
+const stepMachine = document.getElementById('stepMachine');
+const stepSize = document.getElementById('stepSize');
+const stepData = document.getElementById('stepData');
+const machineValueLabel = document.getElementById('machineValueLabel');
+const sizeValueLabel = document.getElementById('sizeValueLabel');
+const sizeChoiceGrid = document.getElementById('sizeChoiceGrid');
 
 fDate.value = new Date().toISOString().slice(0,10);
+
 SIZES.forEach(s => {
-  const o = document.createElement('option'); o.value = s; o.textContent = s;
-  fSize.appendChild(o);
-  const o2 = document.createElement('option'); o2.value = s; o2.textContent = s;
-  rSize.appendChild(o2);
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'choice-btn'; b.dataset.size = s;
+  b.innerHTML = `${s}` + (PLATED_SIZES.includes(s) ? '<span class="tag">PSD · Density · Plated</span>' : '<span class="tag">PSD · Density</span>');
+  sizeChoiceGrid.appendChild(b);
+});
+
+document.querySelectorAll('#stepMachine [data-machine]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    entryState.machine = btn.dataset.machine;
+    document.querySelectorAll('#stepMachine [data-machine]').forEach(b => b.classList.toggle('selected', b === btn));
+    machineValueLabel.textContent = entryState.machine;
+    stepSize.classList.remove('locked');
+  });
+});
+
+document.querySelectorAll('#stepSize [data-size]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    entryState.size = btn.dataset.size;
+    document.querySelectorAll('#stepSize [data-size]').forEach(b => b.classList.toggle('selected', b === btn));
+    sizeValueLabel.textContent = entryState.size;
+    stepData.classList.remove('locked');
+    renderSieveInputs(entryState.size);
+    platedBlock.style.display = PLATED_SIZES.includes(entryState.size) ? 'block' : 'none';
+    document.getElementById('fPlated').required = PLATED_SIZES.includes(entryState.size);
+  });
 });
 
 function renderSieveInputs(size){
   const list = SIEVES[size] || [];
-  sieveTagLine.textContent = 'Sieve set: ' + list.join(' · ');
   sieveInputs.innerHTML = '';
   list.forEach(name => {
     const wrap = document.createElement('div');
@@ -420,101 +517,122 @@ function renderSieveInputs(size){
   });
 }
 
-function onSizeChange(){
-  const size = fSize.value;
-  machineBadge.textContent = SIZE_MACHINE[size] || '—';
-  renderSieveInputs(size);
-  platedBlock.style.display = PLATED_SIZES.includes(size) ? 'block' : 'none';
-  document.getElementById('fPlated').required = PLATED_SIZES.includes(size);
-}
-fSize.addEventListener('change', onSizeChange);
-fSize.value = SIZES[0];
-onSizeChange();
-
-/* ================= BOTTLE COUNTER (gauge) ================= */
-const gaugeArc = document.getElementById('gaugeArc');
-const bottleGaugeNum = document.getElementById('bottleGaugeNum');
-const cycleLabel = document.getElementById('cycleLabel');
-const CIRC = 251.2;
-
-function paintGauge(n){
-  bottleGaugeNum.textContent = n;
-  const frac = n / 1000;
-  gaugeArc.setAttribute('stroke-dashoffset', String(CIRC - frac * CIRC));
-  cycleLabel.textContent = `${n} / 1000 — cycle එකේ ${Math.round(frac*100)}%`;
-  fBottle.value = n;
-}
-
+/* ================= BOTTLE COUNTER (background, no UI) ================= */
 async function getNextBottleNumber(){
-  bottleGaugeNum.textContent = '…';
   const ref = db.collection('counters').doc('bottle');
-  try{
-    const next = await db.runTransaction(async t => {
-      const doc = await t.get(ref);
-      let current = doc.exists ? (doc.data().current || 0) : 0;
-      let n = current + 1;
-      if (n > 1000) n = 1;
-      t.set(ref, { current: n }, { merge: true });
-      return n;
-    });
-    paintGauge(next);
-  }catch(e){
-    console.error(e);
-    showMsg(entryMsg, 'err', 'Bottle අංකය ගන්න බැරි උනා — connection එක check කරන්න.');
-  }
+  return db.runTransaction(async t => {
+    const doc = await t.get(ref);
+    let current = doc.exists ? (doc.data().current || (BOTTLE_START - 1)) : (BOTTLE_START - 1);
+    let n = current + 1;
+    if (n > 1000) n = 1;
+    t.set(ref, { current: n }, { merge: true });
+    return n;
+  });
 }
-document.getElementById('refreshBottleBtn').addEventListener('click', getNextBottleNumber);
-getNextBottleNumber();
 
 /* ================= SUBMIT ================= */
 function showMsg(el, type, text){
   el.className = 'msg show ' + type;
   el.textContent = text;
-  setTimeout(() => el.classList.remove('show'), 4000);
+  setTimeout(() => el.classList.remove('show'), 5000);
 }
 
 document.getElementById('entryForm').addEventListener('submit', async (e) => {
   e.preventDefault();
+  if (!entryState.machine || !entryState.size){
+    showMsg(entryMsg, 'err', 'Select a machine and size first.');
+    return;
+  }
   const submitBtn = document.getElementById('submitBtn');
   submitBtn.disabled = true;
   submitBtn.textContent = 'Saving…';
 
-  const size = fSize.value;
+  const size = entryState.size;
   const psd = {};
   document.querySelectorAll('#sieveInputs input').forEach(inp => {
     const key = SIEVE_KEYS[inp.dataset.sieve];
     psd[key] = parseFloat(inp.value);
   });
 
-  const record = {
-    date: fDate.value,
-    size: size,
-    machine: SIZE_MACHINE[size],
-    bottleNumber: parseInt(fBottle.value, 10),
-    psd: psd,
-    density: parseFloat(document.getElementById('fDensity').value),
-    plated: PLATED_SIZES.includes(size) ? parseFloat(document.getElementById('fPlated').value || 'NaN') : null,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  };
-
   try{
+    const bottleNumber = await getNextBottleNumber();
+    const record = {
+      date: fDate.value,
+      machine: entryState.machine,
+      size: size,
+      bottleNumber: bottleNumber,
+      psd: psd,
+      density: parseFloat(document.getElementById('fDensity').value),
+      plated: PLATED_SIZES.includes(size) ? parseFloat(document.getElementById('fPlated').value || 'NaN') : null,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
     await db.collection('samples').add(record);
-    showMsg(entryMsg, 'ok', `Sample #${record.bottleNumber} (${size}) save උනා.`);
-    document.getElementById('entryForm').reset();
+    showMsg(entryMsg, 'ok', `Saved — Bottle #${bottleNumber} · ${entryState.machine} · ${size}`);
+
+    document.querySelectorAll('#sieveInputs input').forEach(inp => inp.value = '');
+    document.getElementById('fDensity').value = '';
+    document.getElementById('fPlated').value = '';
     fDate.value = new Date().toISOString().slice(0,10);
-    fSize.value = SIZES[0];
-    onSizeChange();
-    getNextBottleNumber();
   }catch(err){
     console.error(err);
-    showMsg(entryMsg, 'err', 'Save කරන්න බැරි උනා: ' + err.message);
+    showMsg(entryMsg, 'err', 'Could not save: ' + err.message);
   }finally{
     submitBtn.disabled = false;
-    submitBtn.textContent = 'Sample එක Save කරන්න';
+    submitBtn.textContent = 'Save Sample';
   }
 });
 
-/* ================= REPORT ================= */
+/* ================= REPORT: STATE ================= */
+const reportState = { machine: null, size: null };
+const reportModal = document.getElementById('reportModal');
+const reportContextBar = document.getElementById('reportContextBar');
+const reportSizeStep = document.getElementById('reportSizeStep');
+const reportBody = document.getElementById('reportBody');
+const ctxMachine = document.getElementById('ctxMachine');
+const ctxSize = document.getElementById('ctxSize');
+const reportSizeGrid = document.getElementById('reportSizeGrid');
+
+function openReportModal(){ reportModal.classList.add('show'); }
+function closeReportModal(){ reportModal.classList.remove('show'); }
+
+document.querySelectorAll('#reportModal [data-report-machine]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    reportState.machine = btn.dataset.reportMachine;
+    ctxMachine.textContent = reportState.machine;
+    reportContextBar.style.display = 'flex';
+    closeReportModal();
+    reportState.size = null;
+    ctxSize.textContent = '—';
+    reportBody.style.display = 'none';
+    reportSizeStep.style.display = 'block';
+  });
+});
+
+SIZES.forEach(s => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'choice-btn'; b.dataset.reportSize = s;
+  b.textContent = s;
+  reportSizeGrid.appendChild(b);
+});
+document.querySelectorAll('#reportSizeGrid [data-report-size]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    reportState.size = btn.dataset.reportSize;
+    document.querySelectorAll('#reportSizeGrid [data-report-size]').forEach(b => b.classList.toggle('selected', b === btn));
+    ctxSize.textContent = reportState.size;
+    reportBody.style.display = 'block';
+  });
+});
+
+document.getElementById('changeContextBtn').addEventListener('click', openReportModal);
+
+document.getElementById('todayBtn').addEventListener('click', () => {
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById('rFrom').value = today;
+  document.getElementById('rTo').value = today;
+  runSearch();
+});
+
+/* ================= REPORT: SEARCH ================= */
 const resultBody = document.getElementById('resultBody');
 const resultCount = document.getElementById('resultCount');
 const emptyState = document.getElementById('emptyState');
@@ -522,15 +640,16 @@ const resultTable = document.getElementById('resultTable');
 let lastResults = [];
 
 async function runSearch(){
-  resultCount.textContent = 'සොයමින්…';
-  let q = db.collection('samples');
+  if (!reportState.machine || !reportState.size) return;
+  resultCount.textContent = 'Searching…';
+  let q = db.collection('samples')
+    .where('machine', '==', reportState.machine)
+    .where('size', '==', reportState.size);
+
   const from = document.getElementById('rFrom').value;
   const to = document.getElementById('rTo').value;
-  const size = rSize.value;
-
   if (from) q = q.where('date', '>=', from);
   if (to) q = q.where('date', '<=', to);
-  if (size) q = q.where('size', '==', size);
 
   try{
     const snap = await q.get();
@@ -561,13 +680,12 @@ function renderResults(){
     const p = r.psd || {};
     tr.innerHTML = `
       <td>${r.date || ''}</td>
-      <td>${r.size || ''}</td>
       <td>${r.machine || ''}</td>
       <td>${r.bottleNumber ?? ''}</td>
       <td>${fmt(p.p_plus6)}</td><td>${fmt(p.p_6x8)}</td><td>${fmt(p.p_6x10)}</td>
       <td>${fmt(p.p_6x12)}</td><td>${fmt(p.p_6x14)}</td><td>${fmt(p.p_minus14)}</td>
-      <td>${fmt(r.density)}</td>
-      <td>${r.plated !== null && r.plated !== undefined && !Number.isNaN(r.plated) ? fmt(r.plated) : '—'}</td>
+      <td class="density-cell">${fmt(r.density)}</td>
+      <td class="plated-cell">${(r.plated !== null && r.plated !== undefined && !Number.isNaN(r.plated)) ? fmt(r.plated) : '—'}</td>
     `;
     resultBody.appendChild(tr);
   });
@@ -578,6 +696,7 @@ document.getElementById('searchBtn').addEventListener('click', runSearch);
 
 /* ================= PDF EXPORT ================= */
 document.getElementById('pdfBtn').addEventListener('click', () => {
+  if (!reportState.machine || !reportState.size) return;
   if (lastResults.length === 0){ runSearch().then(exportPdf); return; }
   exportPdf();
 });
@@ -590,16 +709,15 @@ function exportPdf(){
   doc.setFontSize(14);
   doc.text('Coal QC Sample Report', 14, 15);
   doc.setFontSize(9);
-  const from = document.getElementById('rFrom').value || 'ආරම්භය';
-  const to = document.getElementById('rTo').value || 'අද';
-  const size = rSize.value || 'සියල්ල';
-  doc.text(`Period: ${from} — ${to}   |   Size: ${size}   |   Generated: ${new Date().toLocaleString()}`, 14, 21);
+  const from = document.getElementById('rFrom').value || 'Start';
+  const to = document.getElementById('rTo').value || 'Today';
+  doc.text(`Machine: ${reportState.machine}   |   Size: ${reportState.size}   |   Period: ${from} - ${to}   |   Generated: ${new Date().toLocaleString()}`, 14, 21);
 
-  const cols = ['දිනය','Size','Machine','Bottle#','+6','6x8','6x10','6x12','6x14','-14','Density','Plated'];
+  const cols = ['Date','Machine','Bottle#','+6','6x8','6x10','6x12','6x14','-14','Density (g)','Plated (g)'];
   const rows = lastResults.map(r => {
     const p = r.psd || {};
     return [
-      r.date || '', r.size || '', r.machine || '', r.bottleNumber ?? '',
+      r.date || '', r.machine || '', r.bottleNumber ?? '',
       fmt(p.p_plus6), fmt(p.p_6x8), fmt(p.p_6x10), fmt(p.p_6x12), fmt(p.p_6x14), fmt(p.p_minus14),
       fmt(r.density),
       (r.plated !== null && r.plated !== undefined && !Number.isNaN(r.plated)) ? fmt(r.plated) : '—'
@@ -609,11 +727,12 @@ function exportPdf(){
   doc.autoTable({
     head: [cols], body: rows, startY: 26, styles: { fontSize: 8, cellPadding: 2 },
     headStyles: { fillColor: [21,19,15], textColor: [245,241,232] },
-    alternateRowStyles: { fillColor: [246,243,236] }
+    alternateRowStyles: { fillColor: [246,243,236] },
+    columnStyles: { 9: { fillColor: [234,241,244] }, 10: { fillColor: [244,236,218] } }
   });
 
-  doc.save(`qc-report-${from}_to_${to}.pdf`);
+  doc.save(`qc-report-${reportState.machine}-${reportState.size}-${from}_to_${to}.pdf`.replace(/\s+/g,'_'));
 }
 </script>
 </body>
-            </html>
+</html>
